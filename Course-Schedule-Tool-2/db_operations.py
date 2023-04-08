@@ -1,3 +1,4 @@
+#Not currently Functional
 # db_operations.py
 from flask import current_app as app
 

@@ -27,22 +27,15 @@ def execute_query(query, params=None, fetch=False):
         db.close()
     return result
 
-
-
-# Drops tables if they exist
-def drop_tables():
-    execute_query("DROP TABLE IF EXISTS Login")
-    execute_query("DROP TABLE IF EXISTS Student")
-    execute_query("DROP TABLE IF EXISTS Admin")
-    execute_query("DROP TABLE IF EXISTS Course")
-
 # Create the tables
 def create_tables():
     execute_query("CREATE TABLE Student (\
                     student_id int UNSIGNED AUTO_INCREMENT PRIMARY KEY,\
-                    f_name varchar (50),\
-                    l_name varchar(50))"\
-                  )
+                    f_name varchar (50) NOT NULL,\
+                    l_name varchar(50) NOT NULL,\
+                    email varchar(100) UNIQUE NOT NULL,\
+                    date_of_birth char(10)\
+                  )")
     execute_query("CREATE TABLE Admin   (\
                     admin_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,\
                     f_name VARCHAR(50),\
@@ -63,13 +56,13 @@ def create_tables():
     
 def add_default_values():
     # Insert a row into the Student table
-    execute_query("INSERT INTO Student(f_name, l_name) VALUES (%s, %s)", ('Student', 'Student'))
-    student_id = execute_query("SELECT student_id FROM Student WHERE f_name=%s AND l_name=%s", ('Student', 'Student'), fetch=True)
+    execute_query("INSERT INTO Student(f_name, l_name, email) VALUES (%s, %s,%s)", ('Student', 'Student', 'Student.Student@Unversity.ca'))
+    student_id = execute_query("SELECT student_id FROM Student WHERE l_name=%s AND email=%s" , ('Student', 'Student.Student@Unversity.ca'), fetch=True) #not the best solution 
     print("Student ID:", student_id)
 
     # Insert a row into the Admin table
     execute_query("INSERT INTO Admin(f_name, l_name) VALUES (%s, %s)", ('Admin', 'Admin'))
-    admin_id = execute_query("SELECT admin_id FROM Admin WHERE f_name=%s AND l_name=%s", ('Admin', 'Admin'), fetch=True)
+    admin_id = execute_query("SELECT admin_id FROM Admin WHERE f_name=%s AND l_name=%s", ('Admin', 'Admin'), fetch=True) #not the best solution 
     print("Admin ID:", admin_id)
 
     # Insert a row into the Login table with the student_id value
@@ -79,18 +72,24 @@ def add_default_values():
     execute_query("INSERT INTO Login(username, password, admin_id) VALUES (%s, %s, %s)", ('admin0', '1234', admin_id))
 
 
+# Creates a fresh database
+def create_database():
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="3GUv878pnS@n",
+    )
 
-
-
-
-
+    mycursor = db.cursor(buffered=True)
+    mycursor.execute("DROP DATABASE IF EXISTS sql_schedule_database")
+    mycursor.execute("CREATE DATABASE sql_schedule_database")
 
 
 
 
 
 def main():
-    drop_tables()
+    create_database()
     create_tables()
     add_default_values()
 
