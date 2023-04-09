@@ -22,6 +22,10 @@ app.register_blueprint(admin_routes)
 def login():
     return render_template('login.html')
 
+@app.route('/')
+def create_account():
+    return render_template('create_account.html')
+
 
 #Processes the create account page
 @app.route('/create_account', methods=['POST'])
