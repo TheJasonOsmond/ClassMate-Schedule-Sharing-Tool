@@ -28,14 +28,6 @@ def execute_query(query, params=None, fetch=False):
     return result
 
 
-
-# Drops tables if they exist
-def drop_tables():
-    execute_query("DROP TABLE IF EXISTS Login")
-    execute_query("DROP TABLE IF EXISTS Student")
-    execute_query("DROP TABLE IF EXISTS Admin")
-    execute_query("DROP TABLE IF EXISTS Course")
-
 # Create the tables
 def create_tables():
     execute_query("CREATE TABLE Student (\
@@ -82,6 +74,19 @@ def add_default_values():
 
 
 
+def create_database():
+    db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="3GUv878pnS@n"
+    )
+    
+    mycursor = db.cursor()
+
+    mycursor.execute("DROP DATABASE IF EXISTS sql_schedule_database")
+    mycursor.execute("CREATE DATABASE sql_schedule_database")
+
+
 
 
 
@@ -90,7 +95,7 @@ def add_default_values():
 
 
 def main():
-    drop_tables()
+    create_database() #Replaces Database
     create_tables()
     add_default_values()
 
