@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>Account Creation</title>
+  </head>
+  <body>
+    <h1>Create Account</h1>
+    <form>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username"><br><br>
+
+      <label for="student_id">Student ID:</label>
+      <input type="student_id" id="student_id" name="student_id"><br><br>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password"><br><br>
+
+      <input type="submit" value="Create Account">
+      {% if status_message %}
+        <p class="status">{{ status_message }}</p>
+      {% endif %}
+    </form>
+  </body>
+</html>

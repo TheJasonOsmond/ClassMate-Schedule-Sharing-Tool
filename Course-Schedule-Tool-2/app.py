@@ -22,6 +22,42 @@ app.register_blueprint(admin_routes)
 def login():
     return render_template('login.html')
 
+
+#Processes the create account page
+@app.route('/create_account', methods=['POST'])
+def createAccount():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        student_id = request.form['studentid']
+        
+        # Create a cursor to interact with the database
+        cur = mysql.connection.cursor()
+        
+        # Check if the submitted username exist in the Login table
+        cur.execute("SELECT student_id, admin_id FROM Login WHERE username = %s", (username))
+        
+        account = cur.fetchone()
+        
+        # if an account is found, display an error message
+        if account:
+            error_message = "Error: account with this username already exists"
+            return render_template('create_account.html', status_message=error_message)
+
+        cur.execute("INSERT INTO Login (username, password, student_id) VALUES (%s, %s)", (username, password, student_id))
+        
+        # Commit the changes to the database
+        mysql.connection.commit()
+        
+        # Close the cursor and database connection
+        cur.close()
+        mysql.connection.close()
+        
+        # Redirect the user to the login page
+        success_message = "Account successfully created"
+        return render_template('create_account.html', status_message=success_message)
+    
+    
 #Processes the login page
 @app.route('/login', methods=['POST'])
 def authenticate():
