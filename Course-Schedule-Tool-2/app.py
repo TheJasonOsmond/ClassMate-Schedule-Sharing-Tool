@@ -34,7 +34,7 @@ def createAccount():
         username = request.form['username']
         password = request.form['password']
         f_name = request.form['f_name']
-        f_name = request.form['l_name']
+        l_name = request.form['l_name']
         
         # Create a cursor to interact with the database
         cur = mysql.connection.cursor()
