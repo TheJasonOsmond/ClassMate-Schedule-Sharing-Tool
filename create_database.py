@@ -56,6 +56,7 @@ def create_tables():
 def add_default_values():
     # Insert a row into the Student table
     execute_query("INSERT INTO Student(f_name, l_name) VALUES (%s, %s)", ('Student', 'Student'))
+    execute_query("INSERT INTO Student(f_name, l_name) VALUES (%s, %s)", ('John', 'Doe'))
     student_id = execute_query("SELECT student_id FROM Student WHERE f_name=%s AND l_name=%s", ('Student', 'Student'), fetch=True)
     print("Student ID:", student_id)
 

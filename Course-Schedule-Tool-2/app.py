@@ -33,33 +33,40 @@ def createAccount():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        student_id = request.form['studentid']
+        student_id = request.form['student_id']
         
         # Create a cursor to interact with the database
         cur = mysql.connection.cursor()
         
-        # Check if the submitted username exist in the Login table
-        cur.execute("SELECT student_id, admin_id FROM Login WHERE username = %s", (username))
-        
+        # Check if the submitted username exists in the Login table
+        cur.execute("SELECT student_id, admin_id FROM Login WHERE username = %s", (username,))
         account = cur.fetchone()
         
-        # if an account is found, display an error message
+        # If an account is found, display an error message
         if account:
             error_message = "Error: account with this username already exists"
             return render_template('create_account.html', status_message=error_message)
 
-        cur.execute("INSERT INTO Login (username, password, student_id) VALUES (%s, %s)", (username, password, student_id))
+        # Check if the student_id exists in the Student table
+        cur.execute("SELECT student_id FROM Student WHERE student_id = %s", (student_id,))
+        student = cur.fetchone()
         
-        # Commit the changes to the database
+        # If the student_id does not exist, display an error message
+        if not student:
+            error_message = "Error: invalid student ID"
+            return render_template('create_account.html', status_message=error_message)
+
+        # Insert the new account into the Login table
+        cur.execute("INSERT INTO Login (username, password, student_id) VALUES (%s, %s, %s)", (username, password, student_id))
+        
+        # Commit the changes to the database and close the cursor
         mysql.connection.commit()
-        
-        # Close the cursor and database connection
         cur.close()
-        mysql.connection.close()
         
-        # Redirect the user to the login page
+        # Redirect the user to the create account page with a success message
         success_message = "Account successfully created"
         return render_template('create_account.html', status_message=success_message)
+
     
     
 #Processes the login page
