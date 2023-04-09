@@ -33,7 +33,8 @@ def createAccount():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        student_id = request.form['student_id']
+        f_name = request.form['f_name']
+        f_name = request.form['l_name']
         
         # Create a cursor to interact with the database
         cur = mysql.connection.cursor()
@@ -47,17 +48,7 @@ def createAccount():
             error_message = "Error: account with this username already exists"
             return render_template('create_account.html', status_message=error_message)
 
-        # Check if the student_id exists in the Student table
-        cur.execute("SELECT student_id FROM Student WHERE student_id = %s", (student_id,))
-        student = cur.fetchone()
-        
-        # If the student_id does not exist, display an error message
-        if not student:
-            error_message = "Error: invalid student ID"
-            return render_template('create_account.html', status_message=error_message)
-
-        # Insert the new account into the Login table
-        cur.execute("INSERT INTO Login (username, password, student_id) VALUES (%s, %s, %s)", (username, password, student_id))
+        cur.execute("INSERT INTO Login (username, password, f_name, l_name) VALUES (%s, %s, %s, %s)", (username, password, f_name, l_name))
         
         # Commit the changes to the database and close the cursor
         mysql.connection.commit()
