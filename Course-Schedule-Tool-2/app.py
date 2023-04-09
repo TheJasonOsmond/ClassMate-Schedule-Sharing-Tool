@@ -48,7 +48,13 @@ def createAccount():
             error_message = "Error: account with this username already exists"
             return render_template('create_account.html', status_message=error_message)
 
-        cur.execute("INSERT INTO Login (username, password, f_name, l_name) VALUES (%s, %s, %s, %s)", (username, password, f_name, l_name))
+        # Insert the new student into the students table
+        cur.execute("INSERT INTO Student(f_name, l_name) VALUES (%s, %s)", (f_name, l_name))
+        student_id = cur.lastrowid
+
+        # Insert the new account into the Login table
+        cur.execute("INSERT INTO Login (username, password, student_id) VALUES (%s, %s, %s)", (username, password, student_id))
+
         
         # Commit the changes to the database and close the cursor
         mysql.connection.commit()
