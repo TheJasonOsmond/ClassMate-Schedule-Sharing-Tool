@@ -22,7 +22,7 @@ app.register_blueprint(admin_routes)
 def login():
     return render_template('login.html')
 
-@app.route('/')
+@app.route('/create-account')
 def create_account():
     return render_template('create_account.html')
 
