@@ -70,6 +70,17 @@ def add_default_values():
     # Insert a row into the Login table with the admin_id value
     execute_query("INSERT INTO Login(username, password, admin_id) VALUES (%s, %s, %s)", ('admin0', '1234', admin_id))
 
+    # Insert rows into the Course table with the Course names
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 200')
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 250')
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 255')
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 270')
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 290')
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 300')
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 350')
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 355')
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 360')
+    execute_query("INSERT INTO Course (name) VALUES (%s)", 'CPSC 400')
 
 
 
