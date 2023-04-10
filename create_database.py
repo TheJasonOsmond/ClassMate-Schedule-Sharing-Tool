@@ -107,11 +107,13 @@ def add_default_values():
     universities = [('University of XYZ', 'New York'), ('ABC University', 'California'), ('XYZ State University', 'Texas')]
     for university in universities:
         execute_query(f"INSERT INTO University (`name`, location) VALUES ('{university[0]}', '{university[1]}')")
+        print(f"Added University = ('{university[0]}', '{university[1]}')")
 
     # Insert values into Department table, referencing universities by name
     departments = [('Computer Science', 'University of XYZ'), ('Business Administration', 'ABC University'), ('Mechanical Engineering', 'XYZ State University')]
     for department in departments:
         execute_query(f"INSERT INTO Department (`name`, `university`) SELECT '{department[0]}', u.`name` FROM University u WHERE u.`name` = '{department[1]}'")
+        print(f"Added Department = ('{department[0]}', '{department[1]}')")
 
     # Insert values into Professor table, referencing departments and universities by name
     professors = [('John', 'Doe', 'Computer Science', 'University of XYZ'), ('Jane', 'Smith', 'Business Administration', 'ABC University'), ('Bob', 'Johnson', 'Mechanical Engineering', 'XYZ State University')]

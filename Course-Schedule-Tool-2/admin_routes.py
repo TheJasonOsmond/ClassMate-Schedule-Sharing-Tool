@@ -31,7 +31,7 @@ def admin():
 
     return render_template('admin.html', courses=courses, universities=universities, departments=departments, professors=professors, rooms=rooms)
 
-
+# ============== COURSES ============== #
 
 @admin_routes.route('/delete_course', methods=['POST'])
 def delete_course():
@@ -82,6 +82,9 @@ def add_course():
     return render_template('admin.html')
 
 
+# ============== UNIVERSITIES ============== #
+
+
 @admin_routes.route('/add_university', methods=['POST'])
 def add_university():
     mysql = current_app.config['mysql'] #MUST BE ADDED TO EACH ROUTE IN SUB_ROUTES LIKE THIS
@@ -129,4 +132,138 @@ def delete_university():
         return redirect(url_for('admin_routes.admin'))
 
     return render_template('admin.html')
+
+
+# ============== DEPARTMENTS ============== #
+
+
+@admin_routes.route('/add_department', methods=['POST'])
+def add_department():
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        # Get the submitted form data
+        name = request.form['name']
+        university = request.form['university']
+
+        # Create a cursor to interact with the database
+        cur = mysql.connection.cursor()
+
+        # Insert the department data into the Department table
+        insert_query = "INSERT INTO Department (name, university) VALUES (%s, %s)"
+        cur.execute(insert_query, (name, university))
+
+        # Commit the changes to the database and close the cursor
+        mysql.connection.commit()
+        cur.close()
+
+        # Redirect to the admin page
+        return redirect(url_for('admin_routes.admin'))
+
+    return render_template('admin.html')
   
+@admin_routes.route('/delete_department', methods=['POST'])
+def delete_department():
+    mysql = current_app.config['mysql']  # MUST BE ADDED TO EACH ROUTE IN SUB_ROUTES LIKE THIS
+    if request.method == 'POST':
+        # Get the submitted form data
+        name = request.form['name']
+
+        # Create a cursor to interact with the database
+        cur = mysql.connection.cursor()
+
+        # Delete the department from the Department table
+        delete_query = "DELETE FROM Department WHERE name = %s"
+        cur.execute(delete_query, [name])
+
+        # Commit the changes to the database and close the cursor
+        mysql.connection.commit()
+        cur.close()
+
+        # Redirect to the admin page
+        return redirect(url_for('admin_routes.admin'))
+
+    return render_template('admin.html')
+
+# ============== PROFESSORS ============== #
+
+@admin_routes.route('/add_professor', methods=['POST'])
+def add_professor():
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        f_name = request.form['f_name']
+        l_name = request.form['l_name']
+        department = request.form['department']
+        university = request.form['university']
+
+        cur = mysql.connection.cursor()
+
+        insert_query = "INSERT INTO Professor (f_name, l_name, department, university) VALUES (%s, %s, %s, %s)"
+        cur.execute(insert_query, (f_name, l_name, department, university))
+
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('admin_routes.admin'))
+
+    return render_template('admin.html')
+
+
+@admin_routes.route('/delete_professor', methods=['POST'])
+def delete_professor():
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        professor_id = request.form['professor_id']
+
+        cur = mysql.connection.cursor()
+
+        delete_query = "DELETE FROM Professor WHERE professor_id = %s"
+        cur.execute(delete_query, [professor_id])
+
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('admin_routes.admin'))
+
+    return render_template('admin.html')
+
+# ============== ROOMS ============== #
+@admin_routes.route('/add_room', methods=['POST'])
+def add_room():
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        building_id = request.form['building_id']
+        room_id = request.form['room_id']
+        university = request.form['university']
+
+        cur = mysql.connection.cursor()
+
+        insert_query = "INSERT INTO Room (building_id, room_id, university) VALUES (%s, %s, %s)"
+        cur.execute(insert_query, (building_id, room_id, university))
+
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('admin_routes.admin'))
+
+    return render_template('admin.html')
+
+
+@admin_routes.route('/delete_room', methods=['POST'])
+def delete_room():
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        building_id = request.form['building_id']
+        room_id = request.form['room_id']
+
+        cur = mysql.connection.cursor()
+
+        delete_query = "DELETE FROM Room WHERE building_id = %s AND room_id = %s"
+        cur.execute(delete_query, (building_id, room_id))
+
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('admin_routes.admin'))
+
+    return render_template('admin.html')
+

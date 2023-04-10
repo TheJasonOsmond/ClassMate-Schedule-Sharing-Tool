@@ -128,11 +128,12 @@
         <button class="tablink active" onclick="openTab(event, 'tab1')">Courses</button>
         <button class="tablink" onclick="openTab(event, 'tab2')">Universities</button>
         <button class="tablink" onclick="openTab(event, 'tab3')">Departments</button>
-        <button class="tablink" onclick="openTab(event, 'tab4')">Professors</button>
+        <button class="tablink" onclick="openTab(event, 'professors')">Professors</button>
         <button class="tablink" onclick="openTab(event, 'tab5')">Rooms</button>
       </div>
       <!-- COURSES -->
       <div id="tab1" class="tab active">
+        <h3>Courses</h3>
         <div class="course-list">
           <table id="course-table">
             <tr>
@@ -164,6 +165,7 @@
       </div>
       <!-- UNIVERSITIES -->       
       <div id="tab2" class="tab">
+        <h3>Universities</h3>
         <div class="university-list">
           <table id="university-table">
             <tr>
@@ -196,12 +198,160 @@
       </div>
       <!-- DEPARTMENTS -->
       <div id="tab3" class="tab">
+        <h3>Departments</h3>
+        <!-- Department table -->
+        <table>
+          <thead>
+            <tr>
+              <th>Department Name</th>
+              <th>University</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for department in departments %}
+            <tr>
+              <td>{{ department.name }}</td>
+              <td>{{ department.university }}</td>
+              <td>
+                <form action="{{ url_for('admin_routes.delete_department') }}" method="post">
+                  <input type="hidden" name="name" value="{{ department.name }}">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <br>
+        <!-- Add Department form -->
+        <form action="{{ url_for('admin_routes.add_department') }}" method="POST">
+          <label for="name">Department Name:</label>
+          <input type="text" id="name" name="name" required>
+          <label for="university">University:</label>
+          <select name="university" id="university" required>
+            <option value="" disabled selected>Select University</option>
+            {% for university in universities %}
+              <option value="{{ university.name }}">{{ university.name }}</option>
+            {% endfor %}
+          </select>
+          <input type="submit" value="Add Department">
+        </form>
       </div>
       <!-- PROFESSORS -->
-      <div id="tab4" class="tab">
+      <div id="professors" class="tab">
+        <h3>Professors</h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Department</th>
+              <th>University</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for professor in professors %}
+              <tr>
+                <td>{{ professor.professor_id }}</td>
+                <td>{{ professor.f_name }}</td>
+                <td>{{ professor.l_name }}</td>
+                <td>{{ professor.department }}</td>
+                <td>{{ professor.university }}</td>
+                <td>
+                  <form action="{{ url_for('admin_routes.delete_professor') }}" method="post">
+                    <input type="hidden" name="professor_id" value="{{ professor.professor_id }}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <h4>Add a Professor</h4>
+        <form action="{{ url_for('admin_routes.add_professor') }}" method="post">
+          <div class="form-group">
+            <label for="f_name">First Name:</label>
+            <input type="text" class="form-control" id="f_name" name="f_name" required>
+          </div>
+          <div class="form-group">
+            <label for="l_name">Last Name:</label>
+            <input type="text" class="form-control" id="l_name" name="l_name" required>
+          </div>
+          <div class="form-group">
+            <label for="department">Department:</label>
+            <select class="form-control" id="department" name="department" required>
+              <option value="">Select a Department</option>
+              {% for department in departments %}
+                <option value="{{ department.name }}">{{ department.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="university">University:</label>
+            <select class="form-control" id="university" name="university" required>
+              <option value="">Select a University</option>
+              {% for university in universities %}
+                <option value="{{ university.name }}">{{ university.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Professor</button>
+        </form>
       </div>
       <!-- ROOMS -->
       <div id="tab5" class="tab">
+        <h3>Rooms</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Building ID</th>
+                    <th>Room ID</th>
+                    <th>University</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for room in rooms %}
+                <tr>
+                    <td>{{ room.building_id }}</td>
+                    <td>{{ room.room_id }}</td>
+                    <td>{{ room.university }}</td>
+                    <td>
+                        <form action="{{ url_for('admin_routes.delete_room') }}" method="POST">
+                            <input type="hidden" name="building_id" value="{{ room.building_id }}">
+                            <input type="hidden" name="room_id" value="{{ room.room_id }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3>Add Room</h3>
+        <form action="{{ url_for('admin_routes.add_room') }}" method="POST">
+            <div class="form-group">
+                <label for="building_id">Building ID:</label>
+                <input type="number" class="form-control" name="building_id" required>
+            </div>
+            <div class="form-group">
+                <label for="room_id">Room ID:</label>
+                <input type="number" class="form-control" name="room_id" required>
+            </div>
+            <div class="form-group">
+                <label for="university">University:</label>
+                <select class="form-control" name="university" required>
+                    <option value="" selected disabled>Select a university</option>
+                    {% for university in universities %}
+                    <option value="{{ university.name }}">{{ university.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Room</button>
+        </form>
       </div>
     </div>
   </div>
