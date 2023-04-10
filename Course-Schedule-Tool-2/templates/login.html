@@ -12,7 +12,7 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password">
         <br>
-        <input type="submit" value="Login">
+        <input type="submit" value="Login"> 
     </form>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -23,13 +23,12 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
+    <button onclick="location.href='create_account_page'">Create new account</button>
+    <br>
     <br>
     <h2>Access without logging in</h2>
     <button onclick="location.href='/student'">Student</button>
     <button onclick="location.href='/admin'">Admin</button>
-    <br>
-    <br>
-    <button onclick="location.href='/create-account'">Create new account</button>
-    
+
 </body>
 </html>

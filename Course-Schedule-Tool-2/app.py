@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, session
 from flask_mysqldb import MySQL
 from admin_routes import admin_routes
+from student_routes import student_routes
 
 app = Flask(__name__)
 
@@ -16,13 +17,15 @@ mysql = MySQL(app)
 app.secret_key = 'your_secret_key'
 
 app.config['mysql'] = mysql  # Store the mysql instance in the app's config
+
 app.register_blueprint(admin_routes)
+app.register_blueprint(student_routes)
 
 @app.route('/')
 def login():
     return render_template('login.html')
 
-@app.route('/create-account')
+@app.route('/create_account_page')
 def create_account():
     return render_template('create_account.html')
 
@@ -88,19 +91,14 @@ def authenticate():
 
             # Check if the account is an admin or student account
             if account[0] is None:  # Check if the account is an admin account (student_id is None)
-                return redirect(url_for('admin'))
+                return redirect(url_for('admin_routes.admin'))
             else:
-                return redirect(url_for('student'))
+                return redirect(url_for('student_routes.student'))
         else:
             flash('Incorrect username or password.', 'danger')
             return redirect(url_for('login'))
 
     return render_template('login.html')
-
-@app.route('/student')
-def student():
-    return render_template('student.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)

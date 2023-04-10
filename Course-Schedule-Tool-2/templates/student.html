@@ -1,10 +1,18 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
 </head>
 <body>
-    <h1>Welcome, Student!</h1>
+    <header>
+        <h3>Logged in as: {{ username }}</h3> <!-- username is stored in the session, not sure exactly-->
+    </header>
+    <button onclick="location.href='/'">Log Out</button>
+
+    
+    <!-- Add your main content here -->
+
 </body>
 </html>
-``
