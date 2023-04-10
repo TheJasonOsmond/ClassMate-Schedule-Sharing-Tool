@@ -16,7 +16,7 @@ mysql = MySQL(app)
 app.secret_key = 'your_secret_key'
 
 app.config['mysql'] = mysql  # Store the mysql instance in the app's config
-app.register_blueprint(admin_routes, url_prefix='/admin')
+app.register_blueprint(admin_routes)
 
 @app.route('/')
 def login():
