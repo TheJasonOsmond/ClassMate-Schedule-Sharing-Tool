@@ -133,26 +133,29 @@
 			</div>
       <div id="tab1" class="tab active">
         <div class="course-list">
-            <table>
-                <tr>
-                    <th>Course ID</th>
-                    <th>Course Name</th>
-                    <th>Actions</th>
-                </tr>
-                {% for course in courses %}
-                <tr>
-                    <td>{{ course[0] }}</td>
-                    <td>{{ course[1] }}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="button">Edit Course</button>
-                            <button class="button">Delete Course</button>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
+    <table id="course-table">
+        <tr>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Actions</th>
+        </tr>
+        {% for course in courses %}
+        <tr>
+            <td>{{ course[0] }}</td>
+            <td>{{ course[1] }}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="button">Edit Course</button>
+                    <form action="{{ url_for('admin_routes.delete_course') }}" method="POST" style="display: inline;">
+                        <input type="hidden" name="course_id" value="{{ course[0] }}">
+                        <button type="submit" class="button">Delete Course</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
         <button class="button">Add Course</button>
       </div>    
     </div>    
