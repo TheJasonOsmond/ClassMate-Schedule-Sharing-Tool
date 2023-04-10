@@ -101,31 +101,6 @@ def authenticate():
 def student():
     return render_template('student.html')
 
-@app.route('/add_student', methods=['POST'])
-def add_student():
-    if request.method == 'POST':
-        # Get the submitted form data
-        student_id = request.form['student_id']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-
-        # Create a cursor to interact with the database
-        cur = mysql.connection.cursor()
-
-        # Insert the student data into the students table
-        insert_query = "INSERT INTO Student (student_id, f_name, l_name) VALUES (%s, %s, %s)"
-        cur.execute(insert_query, (student_id, first_name, last_name))
-
-        # Commit the changes to the database and close the cursor
-        mysql.connection.commit()
-        cur.close()
-
-
-        # Redirect to the admin page
-        return redirect(url_for('admin'))
-
-    return render_template('admin.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
