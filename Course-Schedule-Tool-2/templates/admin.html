@@ -85,6 +85,10 @@
       margin-right: 10px;
     }
 
+    .scrollable-table {
+      max-height: 400px; /* Adjust this value to your desired max height */
+      overflow-y: auto;
+    }
     table {
       border-collapse: collapse;
       width: 100%;
@@ -103,6 +107,8 @@
     tr:nth-child(even) {
       background-color: #f2f2f2;
     }
+
+    
 	</style>
 	<script>
 		function openTab(event, tabName) {
@@ -134,7 +140,7 @@
       <!-- COURSES -->
       <div id="tab1" class="tab active">
         <h3>Courses</h3>
-        <div class="course-list">
+        <div class="scrollable-table">
           <table id="course-table">
             <tr>
               <th>Course ID</th>
@@ -158,6 +164,7 @@
             {% endfor %}
           </table>
         </div>
+        <h3>Add Course</h3>
         <form action="{{ url_for('admin_routes.add_course') }}" method="POST">
           <input type="text" name="course_name" placeholder="Course Name" required>
           <button type="submit" class="button">Add Course</button>
@@ -166,7 +173,7 @@
       <!-- UNIVERSITIES -->       
       <div id="tab2" class="tab">
         <h3>Universities</h3>
-        <div class="university-list">
+        <div class="scrollable-table">
           <table id="university-table">
             <tr>
               <th>University Name</th>
@@ -190,6 +197,7 @@
             {% endfor %}
           </table>
         </div>
+        <h3>Add Unversity</h3>
         <form action="{{ url_for('admin_routes.add_university') }}" method="POST">
           <input type="text" name="name" placeholder="University Name" required>
           <input type="text" name="location" placeholder="Location" required>
@@ -200,30 +208,32 @@
       <div id="tab3" class="tab">
         <h3>Departments</h3>
         <!-- Department table -->
-        <table>
-          <thead>
-            <tr>
-              <th>Department Name</th>
-              <th>University</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for department in departments %}
-            <tr>
-              <td>{{ department[0] }}</td>
-              <td>{{ department[1] }}</td>
-              <td>
-                <form action="{{ url_for('admin_routes.delete_department') }}" method="post">
-                  <input type="hidden" name="name" value="{{ department[0] }}">
-                  <button type="submit" class="button">Delete Department</button>
-                </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        <br>
+        <div class="scrollable-table">
+          <table id="department-table">
+            <thead>
+              <tr>
+                <th>Department Name</th>
+                <th>University</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for department in departments %}
+              <tr>
+                <td>{{ department[0] }}</td>
+                <td>{{ department[1] }}</td>
+                <td>
+                  <form action="{{ url_for('admin_routes.delete_department') }}" method="post">
+                    <input type="hidden" name="name" value="{{ department[0] }}">
+                    <button type="submit" class="button">Delete Department</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>  
+        <h3>Add Department</h3>
         <!-- Add Department form -->
         <form action="{{ url_for('admin_routes.add_department') }}" method="POST">
           <label for="name">Department Name:</label>
@@ -241,37 +251,38 @@
       <!-- PROFESSORS -->
       <div id="professors" class="tab">
         <h3>Professors</h3>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Department</th>
-              <th>University</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for professor in professors %}
+        <div class="scrollable-table">
+          <table id="professor-table">
+            <thead>
               <tr>
-                <td>{{ professor[0]}}</td>
-                <td>{{ professor[1] }}</td>
-                <td>{{ professor[2] }}</td>
-                <td>{{ professor[3] }}</td>
-                <td>{{ professor[4] }}</td>
-                <td>
-                  <form action="{{ url_for('admin_routes.delete_professor') }}" method="post">
-                    <input type="hidden" name="professor_id" value="{{ professor.professor_id }}">
-                    <button type="submit" class="button">Delete Professor</button>
-                  </form>
-                </td>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Department</th>
+                <th>University</th>
+                <th>Action</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-
-        <h4>Add a Professor</h4>
+            </thead>
+            <tbody>
+              {% for professor in professors %}
+                <tr>
+                  <td>{{ professor[0]}}</td>
+                  <td>{{ professor[1] }}</td>
+                  <td>{{ professor[2] }}</td>
+                  <td>{{ professor[3] }}</td>
+                  <td>{{ professor[4] }}</td>
+                  <td>
+                    <form action="{{ url_for('admin_routes.delete_professor') }}" method="post">
+                      <input type="hidden" name="professor_id" value="{{ professor.professor_id }}">
+                      <button type="submit" class="button">Delete Professor</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <h3>Add a Professor</h3>
         <form action="{{ url_for('admin_routes.add_professor') }}" method="post">
           <div class="form-group">
             <label for="f_name">First Name:</label>
@@ -305,7 +316,8 @@
       <!-- ROOMS -->
       <div id="tab5" class="tab">
         <h3>Rooms</h3>
-        <table class="table table-bordered">
+        <div class="scrollable-table">
+          <table id="room-table">
             <thead>
                 <tr>
                     <th>Building ID</th>
@@ -330,7 +342,8 @@
                 </tr>
                 {% endfor %}
             </tbody>
-        </table>
+          </table>
+        </div>
         <h3>Add Room</h3>
         <form action="{{ url_for('admin_routes.add_room') }}" method="POST">
             <div class="form-group">
