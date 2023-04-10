@@ -86,7 +86,7 @@
     }
 
     .scrollable-table {
-      max-height: 400px; /* Adjust this value to your desired max height */
+      max-height: 350px; /* Adjust this value to your desired max height */
       overflow-y: auto;
     }
     table {
@@ -139,7 +139,6 @@
       </div>
       <!-- COURSES -->
       <div id="tab1" class="tab active">
-        <h3>Courses</h3>
         <div class="scrollable-table">
           <table id="course-table">
             <tr>
@@ -176,6 +175,22 @@
             {% endfor %}
           </table>
         </div>
+        <script>
+          document.getElementById("university").addEventListener("change", function() {
+            const selectedUniversity = this.value;
+            const departmentSelect = document.getElementById("department");
+            const allOptions = Array.from(departmentSelect.querySelectorAll("option"));
+            const defaultOption = allOptions.shift(); // Remove and store the first "Select a Department" option
+        
+            // Filter the options based on the selected university
+            const filteredOptions = allOptions.filter(option => option.dataset.university === selectedUniversity);
+        
+            // Clear the department select and add the filtered options
+            departmentSelect.innerHTML = "";
+            departmentSelect.appendChild(defaultOption);
+            filteredOptions.forEach(option => departmentSelect.appendChild(option));
+          });
+        </script>        
         <h3>Add Course</h3>
         <form action="{{ url_for('admin_routes.add_course') }}" method="POST">
           <div class="form-group">
@@ -196,7 +211,7 @@
             <select class="form-control" id="department" name="department" required>
               <option value="">Select a Department</option>
               {% for department in departments %}
-                <option value="{{ department[0] }}">{{ department[0] }}</option>
+              <option value="{{ department[0] }}" data-university="{{ department[1] }}">{{ department[0] }}</option>
               {% endfor %}
             </select>
           </div>
@@ -223,7 +238,6 @@
       </div>
       <!-- UNIVERSITIES -->       
       <div id="tab2" class="tab">
-        <h3>Universities</h3>
         <div class="scrollable-table">
           <table id="university-table">
             <tr>
@@ -257,7 +271,6 @@
       </div>
       <!-- DEPARTMENTS -->
       <div id="tab3" class="tab">
-        <h3>Departments</h3>
         <!-- Department table -->
         <div class="scrollable-table">
           <table id="department-table">
@@ -301,7 +314,6 @@
       </div>
       <!-- PROFESSORS -->
       <div id="professors" class="tab">
-        <h3>Professors</h3>
         <div class="scrollable-table">
           <table id="professor-table">
             <thead>
@@ -366,7 +378,6 @@
       </div>
       <!-- ROOMS -->
       <div id="tab5" class="tab">
-        <h3>Rooms</h3>
         <div class="scrollable-table">
           <table id="room-table">
             <thead>
