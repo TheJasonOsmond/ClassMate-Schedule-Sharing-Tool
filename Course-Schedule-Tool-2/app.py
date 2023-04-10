@@ -15,7 +15,8 @@ mysql = MySQL(app)
 # Set a secret key for session management
 app.secret_key = 'your_secret_key'
 
-app.register_blueprint(admin_routes)
+admin_routes.config = {'mysql': mysql}  # Set the mysql object in the blueprint's config
+app.register_blueprint(admin_routes, url_prefix='/admin')
 
 
 @app.route('/')
@@ -103,7 +104,18 @@ def student():
 
 @app.route('/admin')
 def admin():
-    return render_template('admin.html')
+    # Create a cursor to interact with the database
+    cur = mysql.connection.cursor()
+    
+    # Execute a SELECT query to get the courses from the database
+    cur.execute("SELECT * FROM Course")
+    courses = cur.fetchall()
+    
+    # Close the cursor
+    cur.close()
+
+    return render_template('admin.html', courses=courses)
+
 
 @app.route('/add_student', methods=['POST'])
 def add_student():

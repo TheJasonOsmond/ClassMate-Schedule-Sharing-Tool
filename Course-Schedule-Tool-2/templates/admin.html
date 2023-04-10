@@ -50,13 +50,14 @@
 			background-color: #ddd;
 		}
 		.tablink.active {
-			background-color: #82ecff;
+			background-color: thistle		;
 			color: #000;
 			position: relative;
 			z-index: 2;
 			border: 1px solid black;
 			border-bottom: none;
 			margin-bottom: -1px;
+      font-weight: bold;
 		}
 		.button-container {
 			margin-top: 10px;
@@ -97,7 +98,7 @@
 		<div class="box">
 			<div class="box-label">Modify System Information</div>
 			<div class="tab-container">
-				<button class="tablink active" onclick="openTab(event, 'tab1')">Courses</button>
+        <button class="tablink active" onclick="openTab(event, 'tab1')">Courses</button>
 				<button class="tablink" onclick="openTab(event, 'tab2')">Universities</button>
 				<button class="tablink" onclick="openTab(event, 'tab3')">Departments</button>
 				<button class="tablink" onclick="openTab(event, 'tab4')">Professors</button>
@@ -110,12 +111,13 @@
                     <th>Course ID</th>
                     <th>Course Name</th>
                 </tr>
+                {% if courses %}
+                <ul>
                 {% for course in courses %}
-                    <tr>
-                        <td>{{ course[0] }}</td>
-                        <td>{{ course[1] }}</td>
-                    </tr>
+                    <li>{{ course[1] }}</li>
                 {% endfor %}
+                </ul>
+            {% endif %}
             </table>
         </div>
         <button class="button">Add Course</button>
