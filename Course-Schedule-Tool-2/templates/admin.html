@@ -1,13 +1,149 @@
-<form method="POST" action="{{ url_for('add_student') }}">
-  <label for="student_id">Student ID:</label>
-  <input type="text" id="student_id" name="student_id" required>
-  <br>
-  <label for="first_name">First Name:</label>
-  <input type="text" id="first_name" name="first_name" required>
-  <br>
-  <label for="last_name">Last Name:</label>
-  <input type="text" id="last_name" name="last_name" required>
-  <br>
-  <input type="submit" value="Add Student">
-  <button onclick="location.href='/'">Return to Login</button>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Admin Page</title>
+	<style>
+		.container {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-start;
+		}
+		.box {
+			border: 1px solid black;
+			padding: 10px;
+			margin-right: 20px;
+		}
+		.box-label {
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
+		.tab-container {
+			border-top: 2px solid #ddd;
+			margin-top: 10px;
+			padding-top: 10px;
+		}
+		.tab {
+			display: none;
+			border: 1px solid black;
+			padding: 10px;
+		}
+		.tab.active {
+			display: block;
+			border-top: 1px solid black;
+			margin-top: 0px;
+		}
+		.tablink {
+			background-color: #eee;
+			color: #333;
+			display: inline-block;
+			padding: 10px 15px;
+			border: none;
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s;
+			margin-bottom: 0px;
+			position: relative;
+			z-index: 1;
+		}
+		.tablink:hover {
+			background-color: #ddd;
+		}
+		.tablink.active {
+			background-color: #82ecff;
+			color: #000;
+			position: relative;
+			z-index: 2;
+			border: 1px solid black;
+			border-bottom: none;
+			margin-bottom: -1px;
+		}
+		.button-container {
+			margin-top: 10px;
+		}
+		.button {
+			display: block;
+			margin-bottom: 5px;
+			background-color: #fff;
+			color: #333;
+			border: 1px solid #ccc;
+			padding: 10px 15px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s;
+		}
+		.button:hover {
+			background-color: #ddd;
+		}
+	</style>
+	<script>
+		function openTab(event, tabName) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tab");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablink");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+			document.getElementById(tabName).style.display = "block";
+			event.currentTarget.className += " active";
+		}
+	</script>
+</head>
+<body>
+	<div class="container">
+		<div class="box">
+			<div class="box-label">Modify System Information</div>
+			<div class="tab-container">
+				<button class="tablink active" onclick="openTab(event, 'tab1')">Courses</button>
+				<button class="tablink" onclick="openTab(event, 'tab2')">Universities</button>
+				<button class="tablink" onclick="openTab(event, 'tab3')">Departments</button>
+				<button class="tablink" onclick="openTab(event, 'tab4')">Professors</button>
+				<button class="tablink" onclick="openTab(event, 'tab5')">Rooms</button>
+			</div>
+      <div id="tab1" class="tab active">
+        <div class="course-list">
+            <table>
+                <tr>
+                    <th>Course ID</th>
+                    <th>Course Name</th>
+                </tr>
+                {% for course in courses %}
+                    <tr>
+                        <td>{{ course[0] }}</td>
+                        <td>{{ course[1] }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <button class="button">Add Course</button>
+        <button class="button">Edit Course</button>
+        <button class="button">Delete Course</button>
+    </div>    
+			<div id="tab2" class="tab">
+				<button class="button">Button 4</button>
+				<button class="button">Button 5</button>
+				<button class="button">Button 6</button>
+			</div>
+			<div id="tab3" class="tab">
+				<button class="button">Button 7</button>
+				<button class="button">Button 8</button>
+				<button class="button">Button 9</button>
+			</div>
+      <div id="tab4" class="tab">
+				<button class="button">Button 7</button>
+				<button class="button">Button 8</button>
+				<button class="button">Button 9</button>
+			</div>
+      <div id="tab5" class="tab">
+				<button class="button">Button 7</button>
+				<button class="button">Button 8</button>
+				<button class="button">Button 9</button>
+			</div>
+		</div>
+	</div>
+  <button class="button" style= "margin-top: 5px;" onclick="location.href='/'">Log Out</button>
+</body>
+</html>

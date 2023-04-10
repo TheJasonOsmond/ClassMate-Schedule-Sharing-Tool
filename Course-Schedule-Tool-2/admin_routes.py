@@ -1,18 +1,21 @@
-# admin_routes.py
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from db_operations import add_student
+from flask import Blueprint, render_template, current_app
 
-admin_routes = Blueprint('admin_routes', __name__)
+admin_routes = Blueprint('admin_routes', __name__, template_folder='templates')
 
-@admin_routes.route('/admin', methods=['GET', 'POST'])
-def admin():
-    if request.method == 'POST':
-        student_id = request.form['student_id']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
+@admin_routes.route('/courses')
+def courses():
+    # Get the MySQL connection from the main app
+    mysql = current_app.config.get('mysql')
 
-        add_student(student_id, first_name, last_name)
-        flash('Student added successfully.', 'success')
-        return redirect(url_for('admin_routes.admin'))
+    # ... (rest of the code)
 
-    return render_template('admin.html')
+    cur = mysql.connection.cursor()
+
+    # Fetch all courses from the Course table
+    cur.execute("SELECT course_id, name FROM Course")
+    courses = cur.fetchall()
+
+    # Close the cursor
+    cur.close()
+
+    return render_template('admin.html', courses=courses)

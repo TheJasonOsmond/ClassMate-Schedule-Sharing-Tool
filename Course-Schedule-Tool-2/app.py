@@ -55,7 +55,6 @@ def createAccount():
         # Insert the new account into the Login table
         cur.execute("INSERT INTO Login (username, password, student_id) VALUES (%s, %s, %s)", (username, password, student_id))
 
-        
         # Commit the changes to the database and close the cursor
         mysql.connection.commit()
         cur.close()
