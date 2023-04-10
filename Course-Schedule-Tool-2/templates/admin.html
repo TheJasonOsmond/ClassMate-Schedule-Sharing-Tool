@@ -215,8 +215,8 @@
               <td>{{ department[1] }}</td>
               <td>
                 <form action="{{ url_for('admin_routes.delete_department') }}" method="post">
-                  <input type="hidden" name="name" value="{{ department.name }}">
-                  <button type="submit" class="btn btn-danger">Delete</button>
+                  <input type="hidden" name="name" value="{{ department[0] }}">
+                  <button type="submit" class="button">Delete Department</button>
                 </form>
               </td>
             </tr>
@@ -229,10 +229,10 @@
           <label for="name">Department Name:</label>
           <input type="text" id="name" name="name" required>
           <label for="university">University:</label>
-          <select name="university" id="university" required>
-            <option value="" disabled selected>Select University</option>
+          <select class="form-control" id="university" name="university" required>
+            <option value="">Select a University</option>
             {% for university in universities %}
-              <option value="{{ university.name }}">{{ university.name }}</option>
+              <option value="{{ university[0] }}">{{ university[0] }}</option>
             {% endfor %}
           </select>
           <input type="submit" value="Add Department">
@@ -263,7 +263,7 @@
                 <td>
                   <form action="{{ url_for('admin_routes.delete_professor') }}" method="post">
                     <input type="hidden" name="professor_id" value="{{ professor.professor_id }}">
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="button">Delete Professor</button>
                   </form>
                 </td>
               </tr>
@@ -286,7 +286,7 @@
             <select class="form-control" id="department" name="department" required>
               <option value="">Select a Department</option>
               {% for department in departments %}
-                <option value="{{ department.name }}">{{ department.name }}</option>
+                <option value="{{ department[0] }}">{{ department[0] }}</option>
               {% endfor %}
             </select>
           </div>
@@ -295,11 +295,11 @@
             <select class="form-control" id="university" name="university" required>
               <option value="">Select a University</option>
               {% for university in universities %}
-                <option value="{{ university.name }}">{{ university.name }}</option>
+                <option value="{{ university[0] }}">{{ university[0] }}</option>
               {% endfor %}
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Add Professor</button>
+          <button type="submit" class="button">Add Professor</button>
         </form>
       </div>
       <!-- ROOMS -->
@@ -324,7 +324,7 @@
                         <form action="{{ url_for('admin_routes.delete_room') }}" method="POST">
                             <input type="hidden" name="building_id" value="{{ room.building_id }}">
                             <input type="hidden" name="room_id" value="{{ room.room_id }}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="button">Delete Room</button>
                         </form>
                     </td>
                 </tr>
@@ -343,14 +343,14 @@
             </div>
             <div class="form-group">
                 <label for="university">University:</label>
-                <select class="form-control" name="university" required>
-                    <option value="" selected disabled>Select a university</option>
-                    {% for university in universities %}
-                    <option value="{{ university.name }}">{{ university.name }}</option>
-                    {% endfor %}
+                <select class="form-control" id="university" name="university" required>
+                  <option value="">Select a University</option>
+                  {% for university in universities %}
+                    <option value="{{ university[0] }}">{{ university[0] }}</option>
+                  {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Add Room</button>
+            <button type="submit" class="button">Add Room</button>
         </form>
       </div>
     </div>

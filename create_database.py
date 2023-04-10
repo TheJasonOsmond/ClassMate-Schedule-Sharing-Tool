@@ -49,8 +49,8 @@ def create_tables():
                     password VARCHAR(50),\
                     student_id INT UNSIGNED NULL,\
                     admin_id INT UNSIGNED NULL,\
-                    FOREIGN KEY (student_id) REFERENCES Student(student_id),\
-                    FOREIGN KEY (admin_id) REFERENCES Admin(admin_id))"
+                    FOREIGN KEY (student_id) REFERENCES Student(student_id) ON DELETE CASCADE,\
+                    FOREIGN KEY (admin_id) REFERENCES Admin(admin_id) ON DELETE CASCADE)"
                 )
     execute_query("CREATE TABLE University (\
                     `name` VARCHAR(100) PRIMARY KEY,\
@@ -59,7 +59,7 @@ def create_tables():
     execute_query("CREATE TABLE Department (\
                     `name` VARCHAR(50) PRIMARY KEY,\
                     `university` VARCHAR(100) NOT NULL,\
-                    FOREIGN KEY (`university`) REFERENCES University(`name`))"
+                    FOREIGN KEY (`university`) REFERENCES University(`name`) ON DELETE CASCADE)"
                   )
     execute_query("CREATE TABLE Professor (\
                     professor_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,\
@@ -67,16 +67,16 @@ def create_tables():
                     l_name VARCHAR(50) NOT NULL,\
                     `department` VARCHAR(50) NOT NULL,\
                     `university` VARCHAR(100) NOT NULL,\
-                    FOREIGN KEY (`department`) REFERENCES Department(`name`),\
-                    FOREIGN KEY (`university`) REFERENCES University(`name`))"
+                    FOREIGN KEY (`department`) REFERENCES Department(`name`) ON DELETE CASCADE,\
+                    FOREIGN KEY (`university`) REFERENCES University(`name`) ON DELETE CASCADE)"
                   )
     execute_query("CREATE TABLE Room (\
                     building_id INT UNSIGNED,\
                     room_id INT UNSIGNED,\
                     `university` VARCHAR(100) NOT NULL,\
-                    PRIMARY KEY (building_id, room_id),\
-                    FOREIGN KEY (`university`) REFERENCES University(`name`))"
-                  )
+                    PRIMARY KEY (building_id, room_id, university),\
+                    FOREIGN KEY (`university`) REFERENCES University(`name`) ON DELETE CASCADE)"
+                )
     
 def add_default_values():
     # Insert a row into the Student table
@@ -104,24 +104,30 @@ def add_default_values():
         execute_query(f"INSERT INTO Course (name) VALUES ('{course[0]}')")
 
     # Insert values into University table
-    universities = [('University of XYZ', 'New York'), ('ABC University', 'California'), ('XYZ State University', 'Texas')]
+    universities = [('University of Calgary', 'Canada'), 
+                    ('University of British Columbia', 'Canada'), 
+                    ('University of Toronto', 'Canada')]
     for university in universities:
         execute_query(f"INSERT INTO University (`name`, location) VALUES ('{university[0]}', '{university[1]}')")
         print(f"Added University = ('{university[0]}', '{university[1]}')")
 
     # Insert values into Department table, referencing universities by name
-    departments = [('Computer Science', 'University of XYZ'), ('Business Administration', 'ABC University'), ('Mechanical Engineering', 'XYZ State University')]
+    departments = [ ('Computer Science', 'University of Calgary'),
+                    ('Business Administration', 'University of British Columbia'),
+                    ('Mechanical Engineering', 'University of Toronto')]
     for department in departments:
         execute_query(f"INSERT INTO Department (`name`, `university`) SELECT '{department[0]}', u.`name` FROM University u WHERE u.`name` = '{department[1]}'")
         print(f"Added Department = ('{department[0]}', '{department[1]}')")
 
     # Insert values into Professor table, referencing departments and universities by name
-    professors = [('John', 'Doe', 'Computer Science', 'University of XYZ'), ('Jane', 'Smith', 'Business Administration', 'ABC University'), ('Bob', 'Johnson', 'Mechanical Engineering', 'XYZ State University')]
+    professors = [  ('John', 'Doe', 'Computer Science', 'University of Calgary'),
+                    ('Jane', 'Smith', 'Business Administration', 'University of British Columbia'), 
+                    ('Bob', 'Johnson', 'Mechanical Engineering', 'University of Toronto')]
     for professor in professors:
         execute_query(f"INSERT INTO Professor (f_name, l_name, `department`, `university`) SELECT '{professor[0]}', '{professor[1]}', d.`name`, u.`name` FROM Department d, University u WHERE d.`name` = '{professor[2]}' AND d.`university` = u.`name` AND u.`name` = '{professor[3]}'")
 
     # Insert values into Room table, referencing universities by name
-    rooms = [(1, 101, 'University of XYZ'), (2, 201, 'ABC University'), (3, 301, 'XYZ State University')]
+    rooms = [(1, 101, 'University of Calgary'), (2, 201, 'University of British Columbia'), (3, 301, 'University of Toronto')]
     for room in rooms:
         execute_query(f"INSERT INTO Room (building_id, room_id, `university`) SELECT {room[0]}, {room[1]}, u.`name` FROM University u WHERE u.`name` = '{room[2]}'")
 
