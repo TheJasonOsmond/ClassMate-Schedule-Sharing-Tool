@@ -211,8 +211,8 @@
           <tbody>
             {% for department in departments %}
             <tr>
-              <td>{{ department.name }}</td>
-              <td>{{ department.university }}</td>
+              <td>{{ department[0] }}</td>
+              <td>{{ department[1] }}</td>
               <td>
                 <form action="{{ url_for('admin_routes.delete_department') }}" method="post">
                   <input type="hidden" name="name" value="{{ department.name }}">
@@ -255,11 +255,11 @@
           <tbody>
             {% for professor in professors %}
               <tr>
-                <td>{{ professor.professor_id }}</td>
-                <td>{{ professor.f_name }}</td>
-                <td>{{ professor.l_name }}</td>
-                <td>{{ professor.department }}</td>
-                <td>{{ professor.university }}</td>
+                <td>{{ professor[0]}}</td>
+                <td>{{ professor[1] }}</td>
+                <td>{{ professor[2] }}</td>
+                <td>{{ professor[3] }}</td>
+                <td>{{ professor[4] }}</td>
                 <td>
                   <form action="{{ url_for('admin_routes.delete_professor') }}" method="post">
                     <input type="hidden" name="professor_id" value="{{ professor.professor_id }}">
@@ -317,9 +317,9 @@
             <tbody>
                 {% for room in rooms %}
                 <tr>
-                    <td>{{ room.building_id }}</td>
-                    <td>{{ room.room_id }}</td>
-                    <td>{{ room.university }}</td>
+                    <td>{{ room[0] }}</td>
+                    <td>{{ room[1] }}</td>
+                    <td>{{ room[2] }}</td>
                     <td>
                         <form action="{{ url_for('admin_routes.delete_room') }}" method="POST">
                             <input type="hidden" name="building_id" value="{{ room.building_id }}">
