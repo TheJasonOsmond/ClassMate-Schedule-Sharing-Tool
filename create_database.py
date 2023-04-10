@@ -78,10 +78,10 @@ def create_tables():
                     name VARCHAR(50) NOT NULL,\
                     university VARCHAR(100) NOT NULL,\
                     department VARCHAR(50) NOT NULL,\
-                    building_id INT UNSIGNED,\
-                    room_id INT UNSIGNED,\
-                    time VARCHAR(50),\
-                    info VARCHAR(255),\
+                    building_id INT UNSIGNED NULL,\
+                    room_id INT UNSIGNED NULL,\
+                    time VARCHAR(50) NULL,\
+                    info VARCHAR(255) NULL,\
                     FOREIGN KEY (`department`, `university`) REFERENCES Department(`name`, `university`) ON DELETE CASCADE,\
                     FOREIGN KEY (building_id, room_id) REFERENCES Room(building_id, room_id) ON DELETE SET NULL)"
                     )
