@@ -76,6 +76,33 @@
 		.button:hover {
 			background-color: #ddd;
 		}
+
+    .action-buttons {
+      display: inline-flex;
+    }
+
+    .action-buttons button:first-child {
+      margin-right: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
 	</style>
 	<script>
 		function openTab(event, tabName) {
@@ -110,19 +137,24 @@
                 <tr>
                     <th>Course ID</th>
                     <th>Course Name</th>
+                    <th>Actions</th>
                 </tr>
-                {% if courses %}
-                <ul>
                 {% for course in courses %}
-                    <li>{{ course[1] }}</li>
+                <tr>
+                    <td>{{ course[0] }}</td>
+                    <td>{{ course[1] }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="button">Edit Course</button>
+                            <button class="button">Delete Course</button>
+                        </div>
+                    </td>
+                </tr>
                 {% endfor %}
-                </ul>
-            {% endif %}
             </table>
         </div>
         <button class="button">Add Course</button>
-        <button class="button">Edit Course</button>
-        <button class="button">Delete Course</button>
+      </div>    
     </div>    
 			<div id="tab2" class="tab">
 				<button class="button">Button 4</button>
