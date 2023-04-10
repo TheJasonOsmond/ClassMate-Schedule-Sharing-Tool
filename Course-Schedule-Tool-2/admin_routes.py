@@ -9,7 +9,7 @@ def admin():
     cur = mysql.connection.cursor()
     
     # Execute a SELECT query to get the courses from the database
-    cur.execute("SELECT * FROM Course")
+    cur.execute("SELECT * FROM Courses")
     courses = cur.fetchall()
 
     cur.execute("SELECT * FROM University")
@@ -44,7 +44,7 @@ def delete_course():
         cur = mysql.connection.cursor()
 
         # Delete the course from the courses table
-        delete_query = "DELETE FROM Course WHERE course_id = %s"
+        delete_query = "DELETE FROM Courses WHERE course_id = %s"
         cur.execute(delete_query, (course_id,))
 
         # Commit the changes to the database and close the cursor
@@ -63,13 +63,20 @@ def add_course():
     if request.method == 'POST':
         # Get the submitted form data
         course_name = request.form['course_name']
+        university = request.form['university']
+        department = request.form['department']
+        building_id = request.form['building_id']
+        room_id = request.form['room_id']
+        time = request.form['time']
+        info = request.form['info']
+
 
         # Create a cursor to interact with the database
         cur = mysql.connection.cursor()
 
         # Insert the course data into the courses table
-        insert_query = "INSERT INTO Course (name) VALUES (%s)"
-        cur.execute(insert_query, (course_name,))
+        insert_query = "INSERT INTO Courses (name, university, department, building_id, room_id, time, info) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        cur.execute(insert_query, (course_name, university, department, building_id, room_id, time, info))
 
 
         # Commit the changes to the database and close the cursor
@@ -254,12 +261,12 @@ def delete_room():
     if request.method == 'POST':
         building_id = request.form['building_id']
         room_id = request.form['room_id']
+        university = request.form['university']
 
         cur = mysql.connection.cursor()
 
-        delete_query = "DELETE FROM Room WHERE building_id = %s AND room_id = %s"
-        cur.execute(delete_query, (building_id, room_id))
-
+        delete_query = "DELETE FROM Room WHERE building_id = %s AND room_id = %s AND `university` = %s"
+        cur.execute(delete_query, (building_id, room_id, university))
         mysql.connection.commit()
         cur.close()
 

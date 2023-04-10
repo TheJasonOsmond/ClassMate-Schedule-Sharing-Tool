@@ -145,12 +145,24 @@
             <tr>
               <th>Course ID</th>
               <th>Course Name</th>
+              <th>University</th>
+              <th>Department</th>
+              <th>Building ID</th>
+              <th>Room ID</th>
+              <th>Time</th>
+              <th>Info</th>
               <th>Actions</th>
             </tr>
             {% for course in courses %}
             <tr>
               <td>{{ course[0] }}</td>
               <td>{{ course[1] }}</td>
+              <td>{{ course[2] }}</td>
+              <td>{{ course[3] }}</td>
+              <td>{{ course[4] }}</td>
+              <td>{{ course[5] }}</td>
+              <td>{{ course[6] }}</td>
+              <td>{{ course[7] }}</td>
               <td>
                 <div class="action-buttons">
                   <button class="button">Edit Course</button>
@@ -167,6 +179,12 @@
         <h3>Add Course</h3>
         <form action="{{ url_for('admin_routes.add_course') }}" method="POST">
           <input type="text" name="course_name" placeholder="Course Name" required>
+          <input type="text" name="university" placeholder="University" required>
+          <input type="text" name="department" placeholder="Department" required>
+          <input type="number" name="building_id" placeholder="Building ID" required>
+          <input type="number" name="room_id" placeholder="Room ID" required>
+          <input type="text" name="time" placeholder="Time" required>
+          <input type="text" name="info" placeholder="Info" required>
           <button type="submit" class="button">Add Course</button>
         </form>
       </div>
@@ -334,8 +352,9 @@
                     <td>{{ room[2] }}</td>
                     <td>
                         <form action="{{ url_for('admin_routes.delete_room') }}" method="POST">
-                            <input type="hidden" name="building_id" value="{{ room.building_id }}">
-                            <input type="hidden" name="room_id" value="{{ room.room_id }}">
+                            <input type="hidden" name="building_id" value="{{ room[0] }}">
+                            <input type="hidden" name="room_id" value="{{ room[1]}}">
+                            <input type="hidden" name="university" value="{{ room[2] }}">
                             <button type="submit" class="button">Delete Room</button>
                         </form>
                     </td>
