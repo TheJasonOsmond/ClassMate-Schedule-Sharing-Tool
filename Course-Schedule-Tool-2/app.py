@@ -15,8 +15,8 @@ mysql = MySQL(app)
 # Set a secret key for session management
 app.secret_key = 'your_secret_key'
 
-app.register_blueprint(admin_routes)
-
+app.config['mysql'] = mysql  # Store the mysql instance in the app's config
+app.register_blueprint(admin_routes, url_prefix='/admin')
 
 @app.route('/')
 def login():
@@ -100,10 +100,6 @@ def authenticate():
 @app.route('/student')
 def student():
     return render_template('student.html')
-
-@app.route('/admin')
-def admin():
-    return render_template('admin.html')
 
 @app.route('/add_student', methods=['POST'])
 def add_student():
