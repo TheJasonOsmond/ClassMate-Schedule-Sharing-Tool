@@ -149,6 +149,7 @@
               <th>Building ID</th>
               <th>Room ID</th>
               <th>Time</th>
+              <th>Days</th>
               <th>Info</th>
               <th>Actions</th>
             </tr>
@@ -161,6 +162,26 @@
               <td>{{ course[4] }}</td>
               <td>{{ course[5] }}</td>
               <td>{{ course[6] }}</td>
+              <td>
+                {% set day_bits = course[8]|int|binary_format(5) %}
+                {% set course_days = [] %}
+                {% if day_bits[0] == "1" %}
+                    {% set course_days = course_days + ["Mon"] %}
+                {% endif %}
+                {% if day_bits[1] == "1" %}
+                    {% set course_days = course_days + ["Tue"] %}
+                {% endif %}
+                {% if day_bits[2] == "1" %}
+                    {% set course_days = course_days + ["Wed"] %}
+                {% endif %}
+                {% if day_bits[3] == "1" %}
+                    {% set course_days = course_days + ["Thu"] %}
+                {% endif %}
+                {% if day_bits[4] == "1" %}
+                    {% set course_days = course_days + ["Fri"] %}
+                {% endif %}
+                {{ ", ".join(course_days) }}
+              </td>
               <td>{{ course[7] }}</td>
               <td>
                 <div class="action-buttons">
@@ -226,6 +247,10 @@
           <div class="form-group">
             <label for="time">Time:</label>
             <input type="text" class="form-control" id="time" name="time">
+          </div>
+          <div class="form-group">
+            <label for="days">Days(int format):</label>
+            <input type="number" class="form-control" id="days" name="days">
           </div>
           <div class="form-group">
             <label for="info">Info:</label>

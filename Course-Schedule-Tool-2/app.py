@@ -13,6 +13,7 @@ app.config['MYSQL_DB'] = 'sql_schedule_database'
 
 mysql = MySQL(app)
 
+
 # Set a secret key for session management
 app.secret_key = 'your_secret_key'
 
@@ -20,6 +21,11 @@ app.config['mysql'] = mysql  # Store the mysql instance in the app's config
 
 app.register_blueprint(admin_routes)
 app.register_blueprint(student_routes)
+
+def binary_format(value, length):
+    return format(value, f"0{length}b")
+
+app.jinja_env.filters['binary_format'] = binary_format
 
 @app.route('/')
 def login():

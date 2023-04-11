@@ -82,6 +82,7 @@ def create_tables():
                     room_id INT UNSIGNED NULL,\
                     time VARCHAR(50) NULL,\
                     info VARCHAR(255) NULL,\
+                    days INT UNSIGNED NULL,\
                     FOREIGN KEY (`department`, `university`) REFERENCES Department(`name`, `university`) ON DELETE CASCADE,\
                     FOREIGN KEY (building_id, room_id) REFERENCES Room(building_id, room_id) ON DELETE SET NULL)"
                     )
@@ -137,20 +138,20 @@ def add_default_values():
         execute_query(f"INSERT INTO Room (building_id, room_id, `university`) SELECT {room[0]}, {room[1]}, u.`name` FROM University u WHERE u.`name` = '{room[2]}'")
 
     # Insert rows into the Courses table with the Course names and other required data
-    courses = [('CPSC 200', 'University of Calgary', 'Computer Science', 1, 101, '10:00-11:30', 'Intro to Computer Science'),
-            ('CPSC 250', 'University of Calgary', 'Computer Science', 1, 101, '12:00-13:30', 'Data Structures'),
-            ('CPSC 255', 'University of British Columbia', 'Computer Science', 2, 201, '14:00-15:30', 'Algorithms'),
-            ('CPSC 270', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Software Engineering'),
-            ('CPSC 290', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Operating Systems'),
-            ('CPSC 300', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Computer Networks'),
-            ('CPSC 350', 'University of Calgary', 'Computer Science', 1, 101, '14:00-15:30', 'Artificial Intelligence'),
-            ('CPSC 355', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Machine Learning'),
-            ('CPSC 360', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Computer Graphics'),
-            ('CPSC 400', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Cryptography')]
+    courses = [('CPSC 200', 'University of Calgary', 'Computer Science', 1, 101, '10:00-11:30', 'Intro to Computer Science', 21),
+            ('CPSC 250', 'University of Calgary', 'Computer Science', 1, 101, '12:00-13:30', 'Data Structures', 21),
+            ('CPSC 255', 'University of British Columbia', 'Computer Science', 2, 201, '14:00-15:30', 'Algorithms', 10),
+            ('CPSC 270', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Software Engineering', 10),
+            ('CPSC 290', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Operating Systems', 20),
+            ('CPSC 300', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Computer Networks', 20),
+            ('CPSC 350', 'University of Calgary', 'Computer Science', 1, 101, '14:00-15:30', 'Artificial Intelligence', 21),
+            ('CPSC 355', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Machine Learning', 5),
+            ('CPSC 360', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Computer Graphics', 21),
+            ('CPSC 400', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Cryptography', 10)]
 
     for course in courses:
-        execute_query(f"INSERT INTO Courses (name, university, department, building_id, room_id, time, info) SELECT \
-                  '{course[0]}', d.`university`, d.`name`, {course[3]}, {course[4]}, '{course[5]}', '{course[6]}' FROM \
+        execute_query(f"INSERT INTO Courses (name, university, department, building_id, room_id, time, info, days) SELECT \
+                  '{course[0]}', d.`university`, d.`name`, {course[3]}, {course[4]}, '{course[5]}', '{course[6]}', '{course[7]}' FROM \
                   Department d WHERE d.`university` = '{course[1]}' AND d.`name` = '{course[2]}'")
 
 

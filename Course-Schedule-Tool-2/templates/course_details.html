@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details</title>
+</head>
+<body>
+    <nav>
+        <a href="/student">Back to Homepage</a>
+    </nav>
+
+    <div id="content">
+        <h1>Course Details</h1>
+        <table>
+            <tr>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Professor</th>
+            </tr>
+            <tr>
+                <td>{{ course_info[0] }}</td>
+                <td>{{ course_info[1] }}</td>
+                <td>{{ course_info[2] }}</td>
+            </tr>
+        </table>
+
+        <h2>Description</h2>
+        <p>{{ course_info[3] }}</p>
+
+        <h2>Time and Location</h2>
+        <p>{{ course_info[4] }}</p>
+    </div>
+</body>
+</html>
