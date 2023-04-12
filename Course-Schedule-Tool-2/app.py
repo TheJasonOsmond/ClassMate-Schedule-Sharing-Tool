@@ -31,6 +31,13 @@ app.jinja_env.filters['binary_format'] = binary_format
 def login():
     return render_template('login.html')
 
+@app.route("/logout")
+def logout():
+    session['loggedin'] = False
+    session['username'] = None
+    session['student_id'] = None
+    return redirect("/")
+
 @app.route('/create_account_page')
 def create_account():
     return render_template('create_account.html')
@@ -86,14 +93,16 @@ def authenticate():
         cur = mysql.connection.cursor()
 
         # Check if the submitted username and password exist in the Login table
-        cur.execute("SELECT student_id, admin_id FROM Login WHERE username = %s AND password = %s", (username, password))
+        cur.execute("SELECT student_id, admin_id, username FROM Login WHERE username = %s AND BINARY password = %s", (username, password))
 
         account = cur.fetchone()
 
         # If an account is found, log in the user
         if account:
             session['loggedin'] = True
-            session['username'] = username
+            session['username'] = account[2] #Shows correct casing of username
+            session['student_id'] = account[0]
+         
 
             # Check if the account is an admin or student account
             if account[0] is None:  # Check if the account is an admin account (student_id is None)
@@ -101,7 +110,7 @@ def authenticate():
             else:
                 return redirect(url_for('student_routes.student'))
         else:
-            flash('Incorrect username or password.', 'danger')
+            flash('Incorrect username or password. Passwords are case sensitive.', 'danger')
             return redirect(url_for('login'))
 
     return render_template('login.html')

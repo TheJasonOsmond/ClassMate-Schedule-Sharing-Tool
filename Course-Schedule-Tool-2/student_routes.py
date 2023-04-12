@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, request, redirect, url_for, session
+from flask import Blueprint, render_template, current_app, request, redirect, url_for, session, flash
 
 student_routes = Blueprint('student_routes', __name__, template_folder='templates')
 
@@ -17,8 +17,18 @@ def student():
     # Execute a SELECT query to get the courses from the database
     cur.execute("SELECT * FROM Courses")
     courses = cur.fetchall()
+    
+    cur.execute("SELECT * FROM Courses WHERE course_id IN (\
+                SELECT course_id FROM CourseList WHERE student_id = %s)", (session['student_id'],))
+    schedule = cur.fetchall()
 
-    return render_template('student.html', username=username, courses=courses)
+    #TODO Join With login to get the usernames of friends
+    cur.execute("SELECT * FROM Student WHERE student_id IN (SELECT student_id FROM Friends WHERE friend_id = %s \
+                UNION \
+                SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
+    friends = cur.fetchall()
+
+    return render_template('student.html', username=username, courses=courses, schedule = schedule,  friends= friends)
 
 @student_routes.route('/course-details/<int:course_id>')
 def course_details(course_id):
@@ -35,9 +45,106 @@ def course_details(course_id):
 # TODO: Adds course that you clicked to schedule
 @student_routes.route('/add_course_to_schedule', methods=['POST'])
 def add_course_to_schedule():
-     mysql = current_app.config['mysql']
-     if request.method == 'POST':
-         name = request.form['name']
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        course_id = request.form['course_id']
+        student_id = session['student_id']
+        cur = mysql.connection.cursor()
+
+        # Check if the entry already exists
+        cur.execute("SELECT * FROM CourseList WHERE student_id = %s AND course_id = %s", (student_id, course_id))
+        existing_entry = cur.fetchone()
+
+        # If the entry does not exist, insert it
+        if existing_entry is None:
+            cur.execute("INSERT INTO CourseList(student_id, course_id) VALUES (%s, %s)", (student_id, course_id))
+            mysql.connection.commit()
+
+        cur.close()
+        return redirect(url_for('student_routes.student'))
+    else:
+        return redirect(url_for('student_routes.student'))
+
+
+@student_routes.route('/remove_course_from_schedule', methods=['POST'])
+def remove_course_from_schedule():
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        course_id = request.form['course_id']
+        student_id = session['student_id']
+        cur = mysql.connection.cursor()
+
+        # Delete the entry from the CourseList table
+        cur.execute("DELETE FROM CourseList WHERE student_id = %s AND course_id = %s", (student_id, course_id))
+        mysql.connection.commit()
+
+        cur.close()
+        return redirect(url_for('student_routes.student'))
+    else:
+        return redirect(url_for('student_routes.student'))
+    
+    
+# ========== FRIENDS LIST ==========
+
+# Might be able to do something with this
+@student_routes.route('/friends_list')
+def friends_list():
+    return redirect(url_for('student_routes.student'))
+
+@student_routes.route('/add_friend', methods=['POST'])
+def add_friend():
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        friend_username = request.form['friend_username']
+        student_id = session['student_id']
+        cur = mysql.connection.cursor()
+
+        # Check if the user with the given username exists
+        cur.execute("SELECT student_id FROM LOGIN WHERE username = %s", (friend_username,))
+        friend = cur.fetchone()
+
+        if friend is None:
+            flash('No user found with the given username', 'error')
+            return redirect(url_for('student_routes.friends_list'))
+
+        friend_id = friend[0]
+
+        # Check if they are already friends
+        cur.execute("SELECT * FROM Friends WHERE (student_id = %s AND friend_id = %s) OR (student_id = %s AND friend_id = %s)", (student_id, friend_id, friend_id, student_id))
+        existing_friendship = cur.fetchone()
+
+        if existing_friendship is not None:
+            flash('You are already friends with this user', 'error')
+            return redirect(url_for('student_routes.friends_list'))
+
+        # Add the friend
+        cur.execute("INSERT INTO Friends (student_id, friend_id) VALUES (%s, %s)", (student_id, friend_id))
+        mysql.connection.commit()
+
+        cur.close()
+        flash('Friend added successfully!', 'success')
+        return redirect(url_for('student_routes.friends_list'))
+    else:
+        return redirect(url_for('student_routes.friends_list'))
+
+@student_routes.route('/remove_friend', methods=['POST'])
+def remove_friend():
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        friend_id = request.form['friend_id']
+        student_id = session['student_id']
+        cur = mysql.connection.cursor()
+
+        # Delete the friend entry from the Friends table
+        cur.execute("DELETE FROM Friends WHERE (student_id = %s AND friend_id = %s) OR (student_id = %s AND friend_id = %s)", (student_id, friend_id, friend_id, student_id))
+        mysql.connection.commit()
+
+        cur.close()
+        return redirect(url_for('student_routes.friends_list'))
+    else:
+        return redirect(url_for('student_routes.friends_list'))
+    
+    
           
 
 def get_student_schedule(mysql, student_id):
