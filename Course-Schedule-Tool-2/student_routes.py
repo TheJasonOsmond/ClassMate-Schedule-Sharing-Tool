@@ -49,8 +49,34 @@ def add_course_to_schedule():
         course_id = request.form['course_id']
         student_id = session['student_id']
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO CourseList(student_id, course_id) VALUES (%s, %s)", (student_id, course_id))
+
+        # Check if the entry already exists
+        cur.execute("SELECT * FROM CourseList WHERE student_id = %s AND course_id = %s", (student_id, course_id))
+        existing_entry = cur.fetchone()
+
+        # If the entry does not exist, insert it
+        if existing_entry is None:
+            cur.execute("INSERT INTO CourseList(student_id, course_id) VALUES (%s, %s)", (student_id, course_id))
+            mysql.connection.commit()
+
+        cur.close()
+        return redirect(url_for('student_routes.student'))
+    else:
+        return redirect(url_for('student_routes.student'))
+
+
+@student_routes.route('/remove_course_from_schedule', methods=['POST'])
+def remove_course_from_schedule():
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        course_id = request.form['course_id']
+        student_id = session['student_id']
+        cur = mysql.connection.cursor()
+
+        # Delete the entry from the CourseList table
+        cur.execute("DELETE FROM CourseList WHERE student_id = %s AND course_id = %s", (student_id, course_id))
         mysql.connection.commit()
+
         cur.close()
         return redirect(url_for('student_routes.student'))
     else:

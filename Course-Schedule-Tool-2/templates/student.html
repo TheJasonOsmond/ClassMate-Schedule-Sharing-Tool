@@ -131,13 +131,13 @@
         <div class="box">
             <div class="box-label">{{session.username}}'s Dashboard</div>
             <div class="tab-container">
-                <button class="tablink active" onclick="openTab(event, 'tab1')">Course Schedule</button>
-                <button class="tablink" onclick="openTab(event, 'tab2')">Add Courses</button>
-                <button class="tablink" onclick="openTab(event, 'tab2')">Remove Courses</button>
-                <button class="tablink" onclick="openTab(event, 'tab3')">Friends</button>
+                <button class="tablink active" onclick="openTab(event, 'courseScheduleTab')">Course Schedule</button>
+                <button class="tablink" onclick="openTab(event, 'addCoursesTab')">Add Courses</button>
+                <button class="tablink" onclick="openTab(event, 'removeCoursesTab')">Remove Courses</button>
+                <button class="tablink" onclick="openTab(event, 'friendsTab')">Friends</button>                
             </div>
             <!-- COURSE SCHEDULE -->
-            <div id="tab1" class="tab active">
+            <div id="courseScheduleTab" class="tab active">
                 <div class="scrollable-table">
                     <table>
                         <tr>
@@ -165,15 +165,14 @@
                                             {% set end_minute = end_time_parts[1]|int %}
                                             {% set day_bit = course[8]|int|binary_format(5) %}
                                             {% if day_bit[loop.index0] == "1" and start_hour * 60 + start_minute <= hour * 60 + half_hour < end_hour * 60 + end_minute %}
-                                                <td><a href="{{ url_for('student_routes.course_details', course_id=course[0]) }}">{{ course[1] }}<br>Room: {{ course[4] }}, {{ course[5] }}</a></td>
+                                                <td><a href="{{ url_for('student_routes.course_details', course_id=course[0]) }}">{{ course[1] }}</a></td>
                                                 {% set course_found = True %}
-                                                {% break %}
                                             {% endif %}
                                         {% endfor %}
                                         {% if not course_found %}
                                             <td></td>
                                         {% endif %}
-                                    {% endfor %}
+                                    {% endfor %}                                                            
                                 </tr>
                             {% endfor %}
                         {% endfor %}
@@ -181,7 +180,7 @@
                 </div>
             </div>
             <!-- ADD COURSES -->       
-            <div id="tab2" class="tab">
+            <div id="addCoursesTab" class="tab">
                 <div class="scrollable-table">
                     <table id="course-table">
                         <tr>
@@ -228,8 +227,8 @@
                                 <td>{{ course[7] }}</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button type="submit" class="button">Add Course To Schedule</button>
                                         <form action="{{ url_for('student_routes.add_course_to_schedule') }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="button">Add Course To Schedule</button>
                                         <input type="hidden" name="course_id" value="{{ course[0] }}">
                                         </form>
                                     </div>
@@ -238,6 +237,67 @@
                         {% endfor %}
                     </table>
                 </div>
+            </div>
+            <div id="removeCoursesTab" class="tab">
+                <div class="scrollable-table">
+                    <table id="course-table">
+                        <tr>
+                            <!--<th>Course ID</th>-->
+                            <th>Course Name</th>
+                            <th>University</th>
+                            <th>Department</th>
+                            <th>Building ID</th>
+                            <th>Room ID</th>
+                            <th>Time</th>
+                            <th>Days</th>
+                            <th>Info</th>
+                            <th>Actions</th>
+                        </tr>
+                        {% for course in schedule %}
+                            <tr>
+                            <!--<td>{{ course[0] }}</td>-->
+                                <td>{{ course[1] }}</td>
+                                <td>{{ course[2] }}</td>
+                                <td>{{ course[3] }}</td>
+                                <td>{{ course[4] }}</td>
+                                <td>{{ course[5] }}</td>
+                                <td>{{ course[6] }}</td>
+                                <td>
+                                    {% set day_bits = course[8]|int|binary_format(5) %}
+                                    {% set course_days = [] %}
+                                    {% if day_bits[0] == "1" %}
+                                        {% set course_days = course_days + ["Mon"] %}
+                                    {% endif %}
+                                    {% if day_bits[1] == "1" %}
+                                        {% set course_days = course_days + ["Tue"] %}
+                                    {% endif %}
+                                    {% if day_bits[2] == "1" %}
+                                        {% set course_days = course_days + ["Wed"] %}
+                                    {% endif %}
+                                    {% if day_bits[3] == "1" %}
+                                        {% set course_days = course_days + ["Thu"] %}
+                                    {% endif %}
+                                    {% if day_bits[4] == "1" %}
+                                        {% set course_days = course_days + ["Fri"] %}
+                                    {% endif %}
+                                    {{ ", ".join(course_days) }}
+                                </td>
+                                <td>{{ course[7] }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <form action="{{ url_for('student_routes.remove_course_from_schedule') }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="button">Remove Course From Schedule</button>
+                                        <input type="hidden" name="course_id" value="{{ course[0] }}">
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div id="friendsTab" class="tab">
+
             </div>
         </div>
     </div>
