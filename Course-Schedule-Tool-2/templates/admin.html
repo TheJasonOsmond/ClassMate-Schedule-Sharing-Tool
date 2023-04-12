@@ -12,9 +12,18 @@
 			border: 1px solid black;
 			padding: 10px;
 			margin-right: 20px;
+      width: 100%;
 		}
+    .header-container {
+      background-color: lightskyblue;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+    }
 		.box-label {
 			font-weight: bold;
+      font-size: 16pt;
 			margin-bottom: 5px;
 		}
 		.tab-container {
@@ -129,7 +138,12 @@
 <body>
   <div class="container">
     <div class="box">
-      <div class="box-label">Modify System Information</div>
+        <div class="header-container">
+            <div class="box-label">{{session.username}}'s Dashboard</div>
+            <form action="/logout" method="get">
+                <button type="submit" class = "button">Logout</button>
+            </form>
+        </div>
       <div class="tab-container">
         <button class="tablink{{ ' active' if active_tab == 'coursesTab' else '' }}" onclick="openTab(event, 'coursesTab')">Courses</button>
         <button class="tablink{{ ' active' if active_tab == 'universitiesTab' else '' }}" onclick="openTab(event, 'universitiesTab')">Universities</button>
@@ -463,8 +477,5 @@
       </div>
     </div>
   </div>
-  <form action="/logout" method="get">
-    <button type="submit" class = "button">Logout</button>
-  </form>
 </body>
 </html>
