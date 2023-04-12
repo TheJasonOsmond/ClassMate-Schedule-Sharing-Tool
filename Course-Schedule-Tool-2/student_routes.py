@@ -153,7 +153,13 @@ def remove_friend():
         return redirect(url_for('student_routes.friends_list'))
 
     
-    
+# @student_routes.route('/get_friend_courses', methods=['GET', 'POST'])
+# def get_friend_courses():
+#     friend_id = request.form['friend_id']
+#     # Fetch the friend's course list using friend_id, and return it in a suitable format (e.g., JSON)
+#     # ...
+#     return redirect(url_for('student_routes.friends_list'))
+
           
 
 def get_student_schedule(mysql, student_id):
