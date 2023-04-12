@@ -17,8 +17,17 @@ def student():
     # Execute a SELECT query to get the courses from the database
     cur.execute("SELECT * FROM Courses")
     courses = cur.fetchall()
+    
+    # cur.execute("SELECT name, university, department, building_id, room_id, time, info, days \
+    #             FROM Courses WHERE course_id IN (\
+    #             SELECT course_id FROM CourseList WHERE student_id = %s)", (session['student_id'],))
+    cur.execute("SELECT * \
+                FROM Courses WHERE course_id IN (\
+                SELECT course_id FROM CourseList WHERE student_id = %s)", (session['student_id'],))
 
-    return render_template('student.html', username=username, courses=courses)
+    schedule = cur.fetchall()
+
+    return render_template('student.html', username=username, courses=courses, schedule = schedule)
 
 @student_routes.route('/course-details/<int:course_id>')
 def course_details(course_id):
@@ -35,9 +44,17 @@ def course_details(course_id):
 # TODO: Adds course that you clicked to schedule
 @student_routes.route('/add_course_to_schedule', methods=['POST'])
 def add_course_to_schedule():
-     mysql = current_app.config['mysql']
-     if request.method == 'POST':
-         name = request.form['name']
+    mysql = current_app.config['mysql']
+    if request.method == 'POST':
+        course_id = request.form['course_id']
+        student_id = session['student_id']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO CourseList(student_id, course_id) VALUES (%s, %s)", (student_id, course_id))
+        mysql.connection.commit()
+        cur.close()
+        return redirect(url_for('student_routes.student'))
+    else:
+        return redirect(url_for('student_routes.student'))
           
 
 def get_student_schedule(mysql, student_id):
