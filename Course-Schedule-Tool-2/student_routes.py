@@ -3,7 +3,8 @@ from flask import Blueprint, render_template, current_app, request, redirect, ur
 student_routes = Blueprint('student_routes', __name__, template_folder='templates')
 
 @student_routes.route('/student')
-def student():
+@student_routes.route('/student/<active_tab>')
+def student(active_tab=None):
     mysql = current_app.config['mysql']  # MUST BE ADDED TO EACH ROUTE IN SUB_ROUTES LIKE THIS
     cur = mysql.connection.cursor()
     
@@ -28,7 +29,11 @@ def student():
                 SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
     friends = cur.fetchall()
 
-    return render_template('student.html', username=username, courses=courses, schedule = schedule,  friends= friends)
+    #Default Active Tab
+    if active_tab == None:
+        active_tab = 'courseScheduleTab'
+
+    return render_template('student.html', username=username, courses=courses, schedule=schedule, friends=friends, active_tab=active_tab)
 
 @student_routes.route('/course-details/<int:course_id>')
 def course_details(course_id):
@@ -61,9 +66,9 @@ def add_course_to_schedule():
             mysql.connection.commit()
 
         cur.close()
-        return redirect(url_for('student_routes.student'))
+        return redirect(url_for('student_routes.student', active_tab='addCoursesTab'))
     else:
-        return redirect(url_for('student_routes.student'))
+        return redirect(url_for('student_routes.student', active_tab='addCoursesTab'))
 
 
 @student_routes.route('/remove_course_from_schedule', methods=['POST'])
@@ -79,17 +84,17 @@ def remove_course_from_schedule():
         mysql.connection.commit()
 
         cur.close()
-        return redirect(url_for('student_routes.student'))
+        return redirect(url_for('student_routes.student', active_tab='removeCoursesTab'))
     else:
-        return redirect(url_for('student_routes.student'))
+        return redirect(url_for('student_routes.student', active_tab='removeCoursesTab'))
     
     
 # ========== FRIENDS LIST ==========
 
-# Might be able to do something with this
+# Sets active tab
 @student_routes.route('/friends_list')
 def friends_list():
-    return redirect(url_for('student_routes.student'))
+    return redirect(url_for('student_routes.student', active_tab='friendsTab'))
 
 @student_routes.route('/add_friend', methods=['POST'])
 def add_friend():
@@ -143,6 +148,7 @@ def remove_friend():
         return redirect(url_for('student_routes.friends_list'))
     else:
         return redirect(url_for('student_routes.friends_list'))
+
     
     
           
