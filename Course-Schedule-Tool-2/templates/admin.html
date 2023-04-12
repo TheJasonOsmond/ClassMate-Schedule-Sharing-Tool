@@ -3,6 +3,9 @@
 <head>
 	<title>Admin Page</title>
 	<style>
+    body {
+			background-color: lightgrey;
+		}
 		.container {
 			display: flex;
 			flex-direction: row;
@@ -12,7 +15,8 @@
 			border: 1px solid black;
 			padding: 10px;
 			margin-right: 20px;
-      width: 100%;
+            width: 100%;
+            background-color: #fff;
 		}
     .header-container {
       background-color: lightskyblue;
@@ -346,16 +350,20 @@
         <h3>Add Department</h3>
         <!-- Add Department form -->
         <form action="{{ url_for('admin_routes.add_department') }}" method="POST">
-          <label for="name">Department Name:</label>
-          <input type="text" id="name" name="name" required>
-          <label for="university">University:</label>
-          <select class="form-control" id="university" name="university" required>
-            <option value="">Select a University</option>
-            {% for university in universities %}
-              <option value="{{ university[0] }}">{{ university[0] }}</option>
-            {% endfor %}
-          </select>
-          <input type="submit" value="Add Department">
+          <div class="form-group">
+            <label for="university">University:</label>
+            <select class="form-control" id="university" name="university" required>
+              <option value="">Select a University</option>
+              {% for university in universities %}
+                <option value="{{ university[0] }}">{{ university[0] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="name">Department Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+          <input type="submit" class="Button" value="Add Department">
         </form>
       </div>
       <!-- PROFESSORS -->
@@ -394,12 +402,13 @@
         <h3>Add a Professor</h3>
         <form action="{{ url_for('admin_routes.add_professor') }}" method="post">
           <div class="form-group">
-            <label for="f_name">First Name:</label>
-            <input type="text" class="form-control" id="f_name" name="f_name" required>
-          </div>
-          <div class="form-group">
-            <label for="l_name">Last Name:</label>
-            <input type="text" class="form-control" id="l_name" name="l_name" required>
+            <label for="university">University:</label>
+            <select class="form-control" id="university" name="university" required>
+              <option value="">Select a University</option>
+              {% for university in universities %}
+                <option value="{{ university[0] }}">{{ university[0] }}</option>
+              {% endfor %}
+            </select>
           </div>
           <div class="form-group">
             <label for="department">Department:</label>
@@ -411,13 +420,12 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="university">University:</label>
-            <select class="form-control" id="university" name="university" required>
-              <option value="">Select a University</option>
-              {% for university in universities %}
-                <option value="{{ university[0] }}">{{ university[0] }}</option>
-              {% endfor %}
-            </select>
+            <label for="f_name">First Name:</label>
+            <input type="text" class="form-control" id="f_name" name="f_name" required>
+          </div>
+          <div class="form-group">
+            <label for="l_name">Last Name:</label>
+            <input type="text" class="form-control" id="l_name" name="l_name" required>
           </div>
           <button type="submit" class="button">Add Professor</button>
         </form>
