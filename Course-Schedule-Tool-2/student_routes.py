@@ -15,13 +15,16 @@ def student(active_tab=None):
         # Redirect to the login page if the user is not logged in
         return redirect(url_for('login'))
     
-    # Execute a SELECT query to get the courses from the database
-    cur.execute("SELECT * FROM Courses")
-    courses = cur.fetchall()
     
     cur.execute("SELECT * FROM Courses WHERE course_id IN (\
                 SELECT course_id FROM CourseList WHERE student_id = %s)", (session['student_id'],))
     schedule = cur.fetchall()
+
+    # Execute a SELECT query to get the courses from the database
+    cur.execute("SELECT * FROM Courses WHERE course_id NOT IN \
+                    (SELECT course_id FROM CourseList WHERE student_id = %s)",
+                    (session['student_id'],))
+    course_search = cur.fetchall()
 
     #TODO Join With login to get the usernames of friends
     cur.execute("SELECT * FROM Student WHERE student_id IN (SELECT student_id FROM Friends WHERE friend_id = %s \
@@ -33,7 +36,7 @@ def student(active_tab=None):
     if active_tab == None:
         active_tab = 'courseScheduleTab'
 
-    return render_template('student.html', username=username, courses=courses, schedule=schedule, friends=friends, active_tab=active_tab)
+    return render_template('student.html', username=username, course_search=course_search, schedule=schedule, friends=friends, active_tab=active_tab)
 
 @student_routes.route('/course-details/<int:course_id>')
 def course_details(course_id):
