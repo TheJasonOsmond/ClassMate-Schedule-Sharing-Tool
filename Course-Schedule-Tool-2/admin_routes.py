@@ -3,7 +3,8 @@ from flask import Blueprint, render_template, current_app, request, redirect, ur
 admin_routes = Blueprint('admin_routes', __name__, template_folder='templates')
 
 @admin_routes.route('/admin')
-def admin():
+@admin_routes.route('/admin/<active_tab>')
+def admin(active_tab=None):
     mysql = current_app.config['mysql'] #MUST BE ADDED TO EACH ROUTE IN SUB_ROUTES LIKE THIS
     # Create a cursor to interact with the database
     cur = mysql.connection.cursor()
@@ -26,10 +27,13 @@ def admin():
     cur.execute("SELECT * FROM Room")
     rooms = cur.fetchall()
     
+    if active_tab == None:
+        active_tab = 'coursesTab'
+
     # Close the cursor
     cur.close()
 
-    return render_template('admin.html', courses=courses, universities=universities, departments=departments, professors=professors, rooms=rooms)
+    return render_template('admin.html', courses=courses, universities=universities, departments=departments, professors=professors, rooms=rooms, active_tab=active_tab)
 
 # ============== COURSES ============== #
 
@@ -52,10 +56,9 @@ def delete_course():
         cur.close()
 
         # Redirect to the admin page
-        return redirect(url_for('admin_routes.admin'))
-
-
-    return render_template('admin.html')
+        return redirect(url_for('admin_routes.admin', active_tab='coursesTab'))
+    
+    return redirect(url_for('admin_routes.admin', active_tab='coursesTab'))
 
 @admin_routes.route('/add_course', methods=['POST'])
 def add_course():
@@ -83,9 +86,9 @@ def add_course():
         cur.close()
 
         # Redirect to the admin page
-        return redirect(url_for('admin_routes.admin'))
+        return redirect(url_for('admin_routes.admin', active_tab='coursesTab'))
 
-    return render_template('admin.html')
+    return redirect(url_for('admin_routes.admin', active_tab='coursesTab'))
 
 
 # ============== UNIVERSITIES ============== #
@@ -111,9 +114,9 @@ def add_university():
         cur.close()
 
         # Redirect to the admin page
-        return redirect(url_for('admin_routes.admin'))
+        return redirect(url_for('admin_routes.admin', active_tab='universitiesTab'))
 
-    return render_template('admin.html')
+    return redirect(url_for('admin_routes.admin', active_tab='universitiesTab'))
 
 
 @admin_routes.route('/delete_university', methods=['POST'])
@@ -135,9 +138,9 @@ def delete_university():
         cur.close()
 
         # Redirect to the admin page
-        return redirect(url_for('admin_routes.admin'))
+        return redirect(url_for('admin_routes.admin', active_tab='universitiesTab'))
 
-    return render_template('admin.html')
+    return redirect(url_for('admin_routes.admin', active_tab='universitiesTab'))
 
 
 # ============== DEPARTMENTS ============== #
@@ -163,9 +166,9 @@ def add_department():
         cur.close()
 
         # Redirect to the admin page
-        return redirect(url_for('admin_routes.admin'))
+        return redirect(url_for('admin_routes.admin', active_tab='departmentsTab'))
 
-    return render_template('admin.html')
+    return redirect(url_for('admin_routes.admin', active_tab='departmentsTab'))
   
 @admin_routes.route('/delete_department', methods=['POST'])
 def delete_department():
@@ -186,9 +189,9 @@ def delete_department():
         cur.close()
 
         # Redirect to the admin page
-        return redirect(url_for('admin_routes.admin'))
+        return redirect(url_for('admin_routes.admin', active_tab='departmentsTab'))
 
-    return render_template('admin.html')
+    return redirect(url_for('admin_routes.admin', active_tab='departmentsTab'))
 
 # ============== PROFESSORS ============== #
 
@@ -209,9 +212,9 @@ def add_professor():
         mysql.connection.commit()
         cur.close()
 
-        return redirect(url_for('admin_routes.admin'))
+        return redirect(url_for('admin_routes.admin', active_tab='professorsTab'))
 
-    return render_template('admin.html')
+    return redirect(url_for('admin_routes.admin', active_tab='professorsTab'))
 
 
 @admin_routes.route('/delete_professor', methods=['POST'])
@@ -228,9 +231,9 @@ def delete_professor():
         mysql.connection.commit()
         cur.close()
 
-        return redirect(url_for('admin_routes.admin'))
+        return redirect(url_for('admin_routes.admin', active_tab='professorsTab'))
 
-    return render_template('admin.html')
+    return redirect(url_for('admin_routes.admin', active_tab='professorsTab'))
 
 # ============== ROOMS ============== #
 @admin_routes.route('/add_room', methods=['POST'])
@@ -249,9 +252,9 @@ def add_room():
         mysql.connection.commit()
         cur.close()
 
-        return redirect(url_for('admin_routes.admin'))
+        return redirect(url_for('admin_routes.admin', active_tab='roomsTab'))
 
-    return render_template('admin.html')
+    return redirect(url_for('admin_routes.admin', active_tab='roomsTab'))
 
 
 @admin_routes.route('/delete_room', methods=['POST'])
@@ -269,7 +272,7 @@ def delete_room():
         mysql.connection.commit()
         cur.close()
 
-        return redirect(url_for('admin_routes.admin'))
+        return redirect(url_for('admin_routes.admin', active_tab='roomsTab'))
 
-    return render_template('admin.html')
+    return redirect(url_for('admin_routes.admin', active_tab='roomsTab'))
 

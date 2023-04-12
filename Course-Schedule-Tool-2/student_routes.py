@@ -16,14 +16,14 @@ def student(active_tab=None):
         return redirect(url_for('login'))
     
     
-    cur.execute("SELECT * FROM Courses WHERE course_id IN (\
-                SELECT course_id FROM CourseList WHERE student_id = %s)", (session['student_id'],))
+    cur.execute("SELECT * FROM Courses WHERE course_id IN \
+                (SELECT course_id FROM CourseList WHERE student_id = %s)", (session['student_id'],))
     schedule = cur.fetchall()
 
     # Execute a SELECT query to get the courses from the database
     cur.execute("SELECT * FROM Courses WHERE course_id NOT IN \
-                    (SELECT course_id FROM CourseList WHERE student_id = %s)",
-                    (session['student_id'],))
+                (SELECT course_id FROM CourseList WHERE student_id = %s)",
+                (session['student_id'],))
     course_search = cur.fetchall()
 
     #TODO Join With login to get the usernames of friends
