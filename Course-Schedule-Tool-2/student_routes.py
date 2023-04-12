@@ -22,6 +22,7 @@ def student():
                 SELECT course_id FROM CourseList WHERE student_id = %s)", (session['student_id'],))
     schedule = cur.fetchall()
 
+    #TODO Join With login to get the usernames of friends
     cur.execute("SELECT * FROM Student WHERE student_id IN (SELECT student_id FROM Friends WHERE friend_id = %s \
                 UNION \
                 SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
