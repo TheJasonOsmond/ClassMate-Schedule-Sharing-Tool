@@ -3,6 +3,9 @@
 <head>
 	<title>Admin Page</title>
 	<style>
+    body {
+			background-color: lightgrey;
+		}
 		.container {
 			display: flex;
 			flex-direction: row;
@@ -12,9 +15,19 @@
 			border: 1px solid black;
 			padding: 10px;
 			margin-right: 20px;
+            width: 100%;
+            background-color: #fff;
 		}
+    .header-container {
+      background-color: lightskyblue;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+    }
 		.box-label {
 			font-weight: bold;
+      font-size: 16pt;
 			margin-bottom: 5px;
 		}
 		.tab-container {
@@ -129,16 +142,21 @@
 <body>
   <div class="container">
     <div class="box">
-      <div class="box-label">Modify System Information</div>
+        <div class="header-container">
+            <div class="box-label">{{session.username}}'s Dashboard</div>
+            <form action="/logout" method="get">
+                <button type="submit" class = "button">Logout</button>
+            </form>
+        </div>
       <div class="tab-container">
-        <button class="tablink active" onclick="openTab(event, 'tab1')">Courses</button>
-        <button class="tablink" onclick="openTab(event, 'tab2')">Universities</button>
-        <button class="tablink" onclick="openTab(event, 'tab3')">Departments</button>
-        <button class="tablink" onclick="openTab(event, 'professors')">Professors</button>
-        <button class="tablink" onclick="openTab(event, 'tab5')">Rooms</button>
-      </div>
+        <button class="tablink{{ ' active' if active_tab == 'coursesTab' else '' }}" onclick="openTab(event, 'coursesTab')">Courses</button>
+        <button class="tablink{{ ' active' if active_tab == 'universitiesTab' else '' }}" onclick="openTab(event, 'universitiesTab')">Universities</button>
+        <button class="tablink{{ ' active' if active_tab == 'departmentsTab' else '' }}" onclick="openTab(event, 'departmentsTab')">Departments</button>
+        <button class="tablink{{ ' active' if active_tab == 'professorsTab' else '' }}" onclick="openTab(event, 'professorsTab')">Professors</button>
+        <button class="tablink{{ ' active' if active_tab == 'roomsTab' else '' }}" onclick="openTab(event, 'roomsTab')">Rooms</button>                           
+    </div>
       <!-- COURSES -->
-      <div id="tab1" class="tab active">
+      <div id="coursesTab" class="tabcontent tab{% if active_tab == 'coursesTab' %} active{% endif %}" data-tabname="coursesTab">
         <div class="scrollable-table">
           <table id="course-table">
             <tr>
@@ -149,6 +167,7 @@
               <th>Building ID</th>
               <th>Room ID</th>
               <th>Time</th>
+              <th>Days</th>
               <th>Info</th>
               <th>Actions</th>
             </tr>
@@ -161,6 +180,26 @@
               <td>{{ course[4] }}</td>
               <td>{{ course[5] }}</td>
               <td>{{ course[6] }}</td>
+              <td>
+                {% set day_bits = course[8]|int|binary_format(5) %}
+                {% set course_days = [] %}
+                {% if day_bits[0] == "1" %}
+                    {% set course_days = course_days + ["Mon"] %}
+                {% endif %}
+                {% if day_bits[1] == "1" %}
+                    {% set course_days = course_days + ["Tue"] %}
+                {% endif %}
+                {% if day_bits[2] == "1" %}
+                    {% set course_days = course_days + ["Wed"] %}
+                {% endif %}
+                {% if day_bits[3] == "1" %}
+                    {% set course_days = course_days + ["Thu"] %}
+                {% endif %}
+                {% if day_bits[4] == "1" %}
+                    {% set course_days = course_days + ["Fri"] %}
+                {% endif %}
+                {{ ", ".join(course_days) }}
+              </td>
               <td>{{ course[7] }}</td>
               <td>
                 <div class="action-buttons">
@@ -228,6 +267,10 @@
             <input type="text" class="form-control" id="time" name="time">
           </div>
           <div class="form-group">
+            <label for="days">Days(int format):</label>
+            <input type="number" class="form-control" id="days" name="days">
+          </div>
+          <div class="form-group">
             <label for="info">Info:</label>
             <input type="text" class="form-control" id="info" name="info">
           </div>
@@ -236,8 +279,8 @@
           <button type="submit" class="button">Add Course</button>
         </form>
       </div>
-      <!-- UNIVERSITIES -->       
-      <div id="tab2" class="tab">
+      <!-- UNIVERSITIES -->    
+      <div id="universitiesTab" class="tabcontent tab{% if active_tab == 'universitiesTab' %} active{% endif %}" data-tabname="universitiesTab">   
         <div class="scrollable-table">
           <table id="university-table">
             <tr>
@@ -251,7 +294,6 @@
               <td>{{ university[1] }}</td>
               <td>
                 <div class="action-buttons">
-                  <button class="button">Edit University</button>
                   <form action="{{ url_for('admin_routes.delete_university') }}" method="POST" style="display: inline;">
                     <input type="hidden" name="name" value="{{ university[0] }}">
                     <button type="submit" class="button">Delete University</button>
@@ -278,7 +320,7 @@
         </form>
       </div>
       <!-- DEPARTMENTS -->
-      <div id="tab3" class="tab">
+      <div id="departmentsTab" class="tabcontent tab{% if active_tab == 'departmentsTab' %} active{% endif %}" data-tabname="departmentsTab">   
         <!-- Department table -->
         <div class="scrollable-table">
           <table id="department-table">
@@ -308,20 +350,24 @@
         <h3>Add Department</h3>
         <!-- Add Department form -->
         <form action="{{ url_for('admin_routes.add_department') }}" method="POST">
-          <label for="name">Department Name:</label>
-          <input type="text" id="name" name="name" required>
-          <label for="university">University:</label>
-          <select class="form-control" id="university" name="university" required>
-            <option value="">Select a University</option>
-            {% for university in universities %}
-              <option value="{{ university[0] }}">{{ university[0] }}</option>
-            {% endfor %}
-          </select>
-          <input type="submit" value="Add Department">
+          <div class="form-group">
+            <label for="university">University:</label>
+            <select class="form-control" id="university" name="university" required>
+              <option value="">Select a University</option>
+              {% for university in universities %}
+                <option value="{{ university[0] }}">{{ university[0] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="name">Department Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+          <input type="submit" class="Button" value="Add Department">
         </form>
       </div>
       <!-- PROFESSORS -->
-      <div id="professors" class="tab">
+      <div id="professorsTab" class="tabcontent tab{% if active_tab == 'professorsTab' %} active{% endif %}" data-tabname="professorsTab">   
         <div class="scrollable-table">
           <table id="professor-table">
             <thead>
@@ -344,7 +390,7 @@
                   <td>{{ professor[4] }}</td>
                   <td>
                     <form action="{{ url_for('admin_routes.delete_professor') }}" method="post">
-                      <input type="hidden" name="professor_id" value="{{ professor.professor_id }}">
+                      <input type="hidden" name="professor_id" value="{{ professor[0] }}">
                       <button type="submit" class="button">Delete Professor</button>
                     </form>
                   </td>
@@ -356,12 +402,13 @@
         <h3>Add a Professor</h3>
         <form action="{{ url_for('admin_routes.add_professor') }}" method="post">
           <div class="form-group">
-            <label for="f_name">First Name:</label>
-            <input type="text" class="form-control" id="f_name" name="f_name" required>
-          </div>
-          <div class="form-group">
-            <label for="l_name">Last Name:</label>
-            <input type="text" class="form-control" id="l_name" name="l_name" required>
+            <label for="university">University:</label>
+            <select class="form-control" id="university" name="university" required>
+              <option value="">Select a University</option>
+              {% for university in universities %}
+                <option value="{{ university[0] }}">{{ university[0] }}</option>
+              {% endfor %}
+            </select>
           </div>
           <div class="form-group">
             <label for="department">Department:</label>
@@ -373,19 +420,18 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="university">University:</label>
-            <select class="form-control" id="university" name="university" required>
-              <option value="">Select a University</option>
-              {% for university in universities %}
-                <option value="{{ university[0] }}">{{ university[0] }}</option>
-              {% endfor %}
-            </select>
+            <label for="f_name">First Name:</label>
+            <input type="text" class="form-control" id="f_name" name="f_name" required>
+          </div>
+          <div class="form-group">
+            <label for="l_name">Last Name:</label>
+            <input type="text" class="form-control" id="l_name" name="l_name" required>
           </div>
           <button type="submit" class="button">Add Professor</button>
         </form>
       </div>
       <!-- ROOMS -->
-      <div id="tab5" class="tab">
+      <div id="roomsTab" class="tabcontent tab{% if active_tab == 'roomsTab' %} active{% endif %}" data-tabname="roomsTab">   
         <div class="scrollable-table">
           <table id="room-table">
             <thead>
@@ -439,6 +485,5 @@
       </div>
     </div>
   </div>
-  <button class="button" style= "margin-top: 5px;" onclick="location.href='/'">Log Out</button>
 </body>
 </html>

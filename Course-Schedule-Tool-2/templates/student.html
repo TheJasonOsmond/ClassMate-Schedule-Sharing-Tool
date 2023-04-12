@@ -1,18 +1,400 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
-</head>
-<body>
-    <header>
-        <h3>Logged in as: {{ username }}</h3> <!-- username is stored in the session, not sure exactly-->
-    </header>
-    <button onclick="location.href='/'">Log Out</button>
+	<title>Student Dashboard</title>
+	<style>
+        body {
+			background-color: lightgrey;
+		}
+		.container {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-start;
+		}
+		.box {
+			border: 1px solid black;
+			padding: 10px;
+			margin-right: 20px;
+            width: 100%;
+            background-color: #fff;
+		}
+        .header-container {
+            background-color: lightskyblue;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+        }
+		.box-label {
+			font-weight: bold;
+            font-size: 16pt;
+			margin-bottom: 5px;
+		}
+		.tab-container {
+			border-top: 2px solid #ddd;
+			margin-top: 10px;
+			padding-top: 10px;
+		}
+		.tab {
+			display: none;
+			border: 1px solid black;
+			padding: 10px;
+		}
+		.tab.active {
+			display: block;
+			border-top: 1px solid black;
+			margin-top: 0px;
+            min-width: 20%;
+		}
+		.tablink {
+			background-color: #eee;
+			color: #333;
+			display: inline-block;
+			padding: 10px 15px;
+			border: none;
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s;
+			margin-bottom: 0px;
+			position: relative;
+			z-index: 1;
+		}
+		.tablink:hover {
+			background-color: #ddd;
+		}
+		.tablink.active {
+			background-color: thistle;
+			color: #000;
+			position: relative;
+			z-index: 2;
+			border: 1px solid black;
+			border-bottom: none;
+			margin-bottom: -1px;
+            font-weight: bold;
+		}
+		.button-container {
+			margin-top: 10px;
+		}
+		.button {
+			display: block;
+			margin-bottom: 5px;
+			background-color: #fff;
+			color: #333;
+			border: 1px solid #ccc;
+			padding: 10px 15px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s;
+		}
+		.button:hover {
+			background-color: #ddd;
+		}
+
+        .action-buttons {
+        display: inline-flex;
+        }
+
+        .action-buttons button:first-child {
+        margin-right: 10px;
+        }
+
+        .scrollable-table {
+        max-height: 350px; /* Adjust this value to your desired max height */
+        overflow-y: auto;
+        }
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        th, td {
+        border: 1px solid #ccc;
+        text-align: left;
+        padding: 8px;
+        }
+
+        th {
+        background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+        background-color: #f2f2f2;
+        }
+
+        .search-friends{
+            background-color: lightgray;
+            border: 1px solid #333;
+            padding: 10px;
+            width: max-content;
+        }
 
     
-    <!-- Add your main content here -->
+	</style>
+	<script>
+		function openTab(event, tabName) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tab");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablink");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+			document.getElementById(tabName).style.display = "block";
+			event.currentTarget.className += " active";
+		}
 
+        document.addEventListener('DOMContentLoaded', function() {
+        const showCoursesButtons = document.querySelectorAll('.show-courses');
+        const modal = document.getElementById('courses-modal');
+        const close = document.querySelector('.close');
+
+        showCoursesButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Show the modal
+                modal.style.display = 'block';
+            });
+        });
+
+        close.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+	</script>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <div class="header-container">
+                <div class="box-label">{{session.username}}'s Dashboard</div>
+                <form action="/logout" method="get">
+                    <button type="submit" class = "button">Logout</button>
+                </form>
+            </div>
+            <div class="tab-container">
+                <button class="tablink{{ ' active' if active_tab == 'courseScheduleTab' else '' }}" onclick="openTab(event, 'courseScheduleTab')">Course Schedule</button>
+                <button class="tablink{{ ' active' if active_tab == 'addCoursesTab' else '' }}" onclick="openTab(event, 'addCoursesTab')">Add Courses</button>
+                <button class="tablink{{ ' active' if active_tab == 'removeCoursesTab' else '' }}" onclick="openTab(event, 'removeCoursesTab')">Remove Courses</button>
+                <button class="tablink{{ ' active' if active_tab == 'friendsTab' else '' }}" onclick="openTab(event, 'friendsTab')">Friends</button>                           
+            </div>
+            <!-- COURSE SCHEDULE -->
+            <div id="courseScheduleTab" class="tabcontent tab{% if active_tab == 'courseScheduleTab' %} active{% endif %}" data-tabname="courseScheduleTab">
+                <div class="scrollable-table">
+                    <table>
+                        <tr>
+                            <th>Time</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                        </tr>
+                        {% for hour in range(7, 21) %}
+                            {% for half_hour in [0, 30] %}
+                                <tr>
+                                    <td class="time-cell">{{ hour }}:{{ "%02d"|format(half_hour) }} - {{ (hour if half_hour == 30 else hour + 1) }}:{{ "%02d"|format((half_hour + 30) % 60) }}</td>
+                                    {% set day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] %}
+                                    {% for day_name in day_names %}
+                                        {% set course_found = False %}
+                                        {% for course in schedule %}
+                                            {% set time_parts = course[6].split("-") %}
+                                            {% set start_time_parts = time_parts[0].split(":") %}
+                                            {% set end_time_parts = time_parts[1].split(":") %}
+                                            {% set start_hour = start_time_parts[0]|int %}
+                                            {% set start_minute = start_time_parts[1]|int %}
+                                            {% set end_hour = end_time_parts[0]|int %}
+                                            {% set end_minute = end_time_parts[1]|int %}
+                                            {% set day_bit = course[8]|int|binary_format(5) %}
+                                            {% if day_bit[loop.index0] == "1" and start_hour * 60 + start_minute <= hour * 60 + half_hour < end_hour * 60 + end_minute %}
+                                                <td><a href="{{ url_for('student_routes.course_details', course_id=course[0]) }}">{{ course[1] }}</a></td>
+                                                {% set course_found = True %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if not course_found %}
+                                            <td></td>
+                                            <!-- {% set course_found = True %} -->
+                                        {% endif %}
+                                    {% endfor %}                                                            
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <!-- ADD COURSES -->       
+            <div id="addCoursesTab" class="tabcontent tab{% if active_tab == 'addCoursesTab' %} active{% endif %}" data-tabname="addCoursesTab">
+                <div class="scrollable-table">
+                    <table id="course-table">
+                        <tr>
+                            <!--<th>Course ID</th>-->
+                            <th>Course Name</th>
+                            <th>University</th>
+                            <th>Department</th>
+                            <th>Building ID</th>
+                            <th>Room ID</th>
+                            <th>Time</th>
+                            <th>Days</th>
+                            <th>Info</th>
+                            <th>Actions</th>
+                        </tr>
+                        {% for course in course_search %}
+                            <tr>
+                            <!--<td>{{ course[0] }}</td>-->
+                                <td>{{ course[1] }}</td>
+                                <td>{{ course[2] }}</td>
+                                <td>{{ course[3] }}</td>
+                                <td>{{ course[4] }}</td>
+                                <td>{{ course[5] }}</td>
+                                <td>{{ course[6] }}</td>
+                                <td>
+                                    {% set day_bits = course[8]|int|binary_format(5) %}
+                                    {% set course_days = [] %}
+                                    {% if day_bits[0] == "1" %}
+                                        {% set course_days = course_days + ["Mon"] %}
+                                    {% endif %}
+                                    {% if day_bits[1] == "1" %}
+                                        {% set course_days = course_days + ["Tue"] %}
+                                    {% endif %}
+                                    {% if day_bits[2] == "1" %}
+                                        {% set course_days = course_days + ["Wed"] %}
+                                    {% endif %}
+                                    {% if day_bits[3] == "1" %}
+                                        {% set course_days = course_days + ["Thu"] %}
+                                    {% endif %}
+                                    {% if day_bits[4] == "1" %}
+                                        {% set course_days = course_days + ["Fri"] %}
+                                    {% endif %}
+                                    {{ ", ".join(course_days) }}
+                                </td>
+                                <td>{{ course[7] }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <form action="{{ url_for('student_routes.add_course_to_schedule') }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="button">Add Course To Schedule</button>
+                                        <input type="hidden" name="course_id" value="{{ course[0] }}">
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div id="removeCoursesTab" class="tabcontent tab{% if active_tab == 'removeCoursesTab' %} active{% endif %}" data-tabname="removeCoursesTab">
+                <div class="scrollable-table">
+                    <table id="course-table">
+                        <tr>
+                            <!--<th>Course ID</th>-->
+                            <th>Course Name</th>
+                            <th>University</th>
+                            <th>Department</th>
+                            <th>Building ID</th>
+                            <th>Room ID</th>
+                            <th>Time</th>
+                            <th>Days</th>
+                            <th>Info</th>
+                            <th>Actions</th>
+                        </tr>
+                        {% for course in schedule %}
+                            <tr>
+                            <!--<td>{{ course[0] }}</td>-->
+                                <td>{{ course[1] }}</td>
+                                <td>{{ course[2] }}</td>
+                                <td>{{ course[3] }}</td>
+                                <td>{{ course[4] }}</td>
+                                <td>{{ course[5] }}</td>
+                                <td>{{ course[6] }}</td>
+                                <td>
+                                    {% set day_bits = course[8]|int|binary_format(5) %}
+                                    {% set course_days = [] %}
+                                    {% if day_bits[0] == "1" %}
+                                        {% set course_days = course_days + ["Mon"] %}
+                                    {% endif %}
+                                    {% if day_bits[1] == "1" %}
+                                        {% set course_days = course_days + ["Tue"] %}
+                                    {% endif %}
+                                    {% if day_bits[2] == "1" %}
+                                        {% set course_days = course_days + ["Wed"] %}
+                                    {% endif %}
+                                    {% if day_bits[3] == "1" %}
+                                        {% set course_days = course_days + ["Thu"] %}
+                                    {% endif %}
+                                    {% if day_bits[4] == "1" %}
+                                        {% set course_days = course_days + ["Fri"] %}
+                                    {% endif %}
+                                    {{ ", ".join(course_days) }}
+                                </td>
+                                <td>{{ course[7] }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <form action="{{ url_for('student_routes.remove_course_from_schedule') }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="button">Remove Course From Schedule</button>
+                                        <input type="hidden" name="course_id" value="{{ course[0] }}">
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div id="friendsTab" class="tabcontent tab{% if active_tab == 'friendsTab' %} active{% endif %}" data-tabname="friendsTab">
+                <div class="search-friends">
+                    <h3>Add Friends</h3>
+                    <form action="{{ url_for('student_routes.add_friend') }}" method="POST">
+                        <input type="text" name="friend_username" placeholder="Enter friend's username...">
+                        <button type="submit" class="button">Add Friend</button>
+                    </form>
+                </div>
+                <div class="friends-list">
+                    <h3>Your Friends</h3>
+                    <table id="friends-table">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for friend in friends %}
+                            <tr>
+                                <td>{{ friend[1] }}</td>
+                                <td>{{ friend[2] }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="button show-courses">View Profile</button>
+                                        <form action="{{ url_for('student_routes.remove_friend') }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="button">Remove Friend</button>
+                                            <input type="hidden" name="friend_id" value="{{ friend[0] }}">
+                                        </form>
+                                    </div>                                    
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
+<!-- Pop-up modal structure - Friend Profile -->
+<div id="courses-modal" class="modal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; z-index: 2; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%;">
+        <span class="close" style="color: #aaaaaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+        <h2>Friend's Profile</h2>
+        <div id="courses-list"></div>
+    </div>
+</div>
+
 </html>

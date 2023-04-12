@@ -13,6 +13,7 @@ app.config['MYSQL_DB'] = 'sql_schedule_database'
 
 mysql = MySQL(app)
 
+
 # Set a secret key for session management
 app.secret_key = 'your_secret_key'
 
@@ -21,9 +22,21 @@ app.config['mysql'] = mysql  # Store the mysql instance in the app's config
 app.register_blueprint(admin_routes)
 app.register_blueprint(student_routes)
 
+def binary_format(value, length):
+    return format(value, f"0{length}b")
+
+app.jinja_env.filters['binary_format'] = binary_format
+
 @app.route('/')
 def login():
     return render_template('login.html')
+
+@app.route("/logout")
+def logout():
+    session['loggedin'] = False
+    session['username'] = None
+    session['student_id'] = None
+    return redirect("/")
 
 @app.route('/create_account_page')
 def create_account():
@@ -80,14 +93,16 @@ def authenticate():
         cur = mysql.connection.cursor()
 
         # Check if the submitted username and password exist in the Login table
-        cur.execute("SELECT student_id, admin_id FROM Login WHERE username = %s AND password = %s", (username, password))
+        cur.execute("SELECT student_id, admin_id, username FROM Login WHERE username = %s AND BINARY password = %s", (username, password))
 
         account = cur.fetchone()
 
         # If an account is found, log in the user
         if account:
             session['loggedin'] = True
-            session['username'] = username
+            session['username'] = account[2] #Shows correct casing of username
+            session['student_id'] = account[0]
+         
 
             # Check if the account is an admin or student account
             if account[0] is None:  # Check if the account is an admin account (student_id is None)
@@ -95,7 +110,7 @@ def authenticate():
             else:
                 return redirect(url_for('student_routes.student'))
         else:
-            flash('Incorrect username or password.', 'danger')
+            flash('Incorrect username or password. Passwords are case sensitive.', 'danger')
             return redirect(url_for('login'))
 
     return render_template('login.html')
