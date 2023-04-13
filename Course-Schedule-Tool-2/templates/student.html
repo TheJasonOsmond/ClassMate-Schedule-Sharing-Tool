@@ -513,7 +513,8 @@
                                     <div class="action-buttons">
                                         <form action="{{ url_for('student_routes.get_course_from_friend') }}" method="POST" style="display: inline;">
                                             <button type="submit" class="button">Get this course</button>
-                                        <input type="hidden" name="course_id" friend_id="{{ friend_id }}" value="{{ course[0] }}">
+                                            <input type="hidden" name="course_id" value="{{ course[0] }}">
+                                            <input type="hidden" name="friend_id" value="{{friend_id}}"> <!-- How to get friend ID-->
                                         </form>
                                     </div>
                                 </td>

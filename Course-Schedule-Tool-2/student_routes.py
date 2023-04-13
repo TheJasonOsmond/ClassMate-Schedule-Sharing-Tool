@@ -94,9 +94,9 @@ def get_course_from_friend():
             mysql.connection.commit()
 
         cur.close()
-        return redirect(url_for('student_routes.get_friend_courses', active_tab='friendProfileTab'))
+        return redirect(url_for('student_routes.get_friend_courses', friend_id=friend_id))
     else:
-        return redirect(url_for('student_routes.get_friend_courses', active_tab='friendProfileTab'))
+        return redirect(url_for('student_routes.get_friend_courses', friend_id=friend_id))
 
 @student_routes.route('/remove_course_from_schedule', methods=['POST'])
 def remove_course_from_schedule():
@@ -178,10 +178,13 @@ def remove_friend():
 
     
 @student_routes.route('/get_friend_courses', methods=['GET', 'POST'])
-def get_friend_courses():
+@student_routes.route('/get_friend_courses/<friend_id>', methods=['GET', 'POST'])
+def get_friend_courses(friend_id=None):
     mysql = current_app.config['mysql']  # MUST BE ADDED TO EACH ROUTE IN SUB_ROUTES LIKE THIS
     cur = mysql.connection.cursor()
-    friend_id = request.form['friend_id']
+
+    if( friend_id==None):
+        friend_id = request.form['friend_id']
     
     # Access session data
     if 'loggedin' in session and session['loggedin']:
@@ -215,7 +218,7 @@ def get_friend_courses():
 
     cur.close()
 
-    return render_template('student.html', username=username, course_search=course_search, schedule=schedule, friends=friends, active_tab='friendProfileTab', friend_schedule = friend_schedule)
+    return render_template('student.html', username=username, course_search=course_search, schedule=schedule, friends=friends, active_tab='friendProfileTab', friend_schedule = friend_schedule, friend_id = friend_id)
 
           
 
