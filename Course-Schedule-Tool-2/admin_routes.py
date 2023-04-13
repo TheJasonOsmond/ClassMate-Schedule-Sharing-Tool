@@ -68,7 +68,7 @@ def add_course():
         course_name = request.form['course_name']
         university = request.form['university']
         department = request.form['department']
-        professor = request.form['professor'] or None
+        professor_id = request.form['professor'] or None
         building_id = request.form['building_id'] or None
         room_id = request.form['room_id'] or None
         time = request.form['time'] or None
@@ -79,8 +79,8 @@ def add_course():
         cur = mysql.connection.cursor()
 
         # Insert the course data into the courses table
-        insert_query = "INSERT INTO Courses (name, university, department, building_id, room_id, time, info, days) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-        cur.execute(insert_query, (course_name, university, department, building_id, room_id, time, info, days))
+        insert_query = "INSERT INTO Courses (name, university, department, building_id, room_id, time, info, days, professor_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        cur.execute(insert_query, (course_name, university, department, building_id, room_id, time, info, days, professor_id))
 
         # Commit the changes to the database and close the cursor
         mysql.connection.commit()
