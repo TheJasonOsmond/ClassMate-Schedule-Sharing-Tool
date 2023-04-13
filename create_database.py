@@ -1,10 +1,13 @@
 import mysql.connector
 
+sql_username = "your_username"
+sql_password = "your_password"
+
 def execute_query(query, params=None, fetch=False):
     db = mysql.connector.connect(
         host="localhost",
-        user="root",
-        passwd="3GUv878pnS@n",
+        user = sql_username,
+        passwd= sql_password,
         database="sql_schedule_database"
     )
 
@@ -185,19 +188,14 @@ def add_default_values():
 def create_database():
     db = mysql.connector.connect(
     host="localhost",
-    user="root",
-    passwd="3GUv878pnS@n"
+    user= sql_username,
+    passwd= sql_password
     )
     
     mycursor = db.cursor()
 
     mycursor.execute("DROP DATABASE IF EXISTS sql_schedule_database")
     mycursor.execute("CREATE DATABASE sql_schedule_database")
-
-
-
-
-
 
 
 

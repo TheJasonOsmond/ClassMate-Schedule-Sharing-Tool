@@ -3,12 +3,15 @@ from flask_mysqldb import MySQL
 from admin_routes import admin_routes
 from student_routes import student_routes
 
+sql_username = "your_username"
+sql_password = "your_password"
+
 app = Flask(__name__)
 
 # Configure MySQL connection
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '3GUv878pnS@n'
+app.config['MYSQL_USER'] = sql_username
+app.config['MYSQL_PASSWORD'] = sql_password
 app.config['MYSQL_DB'] = 'sql_schedule_database'
 
 mysql = MySQL(app)
