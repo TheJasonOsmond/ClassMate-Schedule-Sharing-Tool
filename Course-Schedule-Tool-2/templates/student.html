@@ -371,7 +371,11 @@
                                 <td>{{ friend[2] }}</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="button show-courses">View Profile</button>
+                                        <form action="{{ url_for('student_routes.get_friend_courses') }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="tablink{{ ' active' if active_tab == 'friendProfileTab' else '' }}" onclick="openTab(event, 'friendProfileTab')">View Profile</button>
+                                            <input type="hidden" name="friend_id" value="{{ friend[0] }}">
+                                        </form>
+                                        
                                         <form action="{{ url_for('student_routes.remove_friend') }}" method="POST" style="display: inline;">
                                             <button type="submit" class="button">Remove Friend</button>
                                             <input type="hidden" name="friend_id" value="{{ friend[0] }}">
@@ -383,6 +387,9 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div id="friendProfileTab" class="tabcontent tab{% if active_tab == 'friendProfileTab' %} active{% endif %}" data-tabname="friendProfileTab">
+
             </div>
         </div>
     </div>

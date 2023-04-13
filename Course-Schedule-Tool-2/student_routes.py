@@ -153,12 +153,43 @@ def remove_friend():
         return redirect(url_for('student_routes.friends_list'))
 
     
-# @student_routes.route('/get_friend_courses', methods=['GET', 'POST'])
-# def get_friend_courses():
-#     friend_id = request.form['friend_id']
-#     # Fetch the friend's course list using friend_id, and return it in a suitable format (e.g., JSON)
-#     # ...
-#     return redirect(url_for('student_routes.friends_list'))
+@student_routes.route('/get_friend_courses', methods=['GET', 'POST'])
+def get_friend_courses():
+    mysql = current_app.config['mysql']  # MUST BE ADDED TO EACH ROUTE IN SUB_ROUTES LIKE THIS
+    cur = mysql.connection.cursor()
+    friend_id = request.form['friend_id']
+    
+    # Access session data
+    if 'loggedin' in session and session['loggedin']:
+        username = session['username']
+    else:
+        # Redirect to the login page if the user is not logged in
+        return redirect(url_for('login'))
+    
+    
+    cur.execute("SELECT * FROM Courses WHERE course_id IN \
+                (SELECT course_id FROM CourseList WHERE student_id = %s)", (session['student_id'],))
+    schedule = cur.fetchall()
+
+    # Execute a SELECT query to get the courses from the database
+    cur.execute("SELECT * FROM Courses WHERE course_id NOT IN \
+                (SELECT course_id FROM CourseList WHERE student_id = %s)",
+                (session['student_id'],))
+    course_search = cur.fetchall()
+
+    #TODO Join With login to get the usernames of friends
+    cur.execute("SELECT * FROM Student WHERE student_id IN (SELECT student_id FROM Friends WHERE friend_id = %s \
+                UNION \
+                SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
+    friends = cur.fetchall()
+
+
+    cur.execute("SELECT * FROM COURSES WHERE course_id IN (SELECT course_id FROM CourseList WHERE student_id = %s)", (friend_id,))
+    friend_schedule = cur.fetchall()
+
+    cur.close()
+
+    return render_template('student.html', username=username, course_search=course_search, schedule=schedule, friends=friends, active_tab='friendProfileTab', friend_schedule = friend_schedule)
 
           
 
