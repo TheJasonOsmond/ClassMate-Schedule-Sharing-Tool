@@ -201,7 +201,7 @@
                             {% set i = 0 %}
                             {% for half_hour in [0, 30] %}
                                 <tr>
-                                    <td class="time-cell">{{ hour }}:{{ "%02d"|format(half_hour) }} - {{ (hour if half_hour == 30 else hour + 1) }}:{{ "%02d"|format((half_hour + 30) % 60) }}</td>
+                                    <td class="time-cell">{{ hour }}:{{ "%02d"|format(half_hour) }} - {{ (hour + 1 if half_hour == 30 else hour) }}:{{ "%02d"|format((half_hour + 30) % 60) }}</td>
                                     {% set day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] %}
                                     {% for i in range(5) %}
                                         {% set course_list = []%}
