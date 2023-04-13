@@ -246,7 +246,7 @@
                                 <td>{{ course[1] }}</td>
                                 <td>{{ course[2] }}</td>
                                 <td>{{ course[3] }}</td>
-                                <td>{{ course[9] }}</td>
+                                <td>{{ professors[course[9] - 1][1] }} {{ professors[course[9] - 1][2] }}</td>
                                 <td>{{ course[4] }}</td>
                                 <td>{{ course[5] }}</td>
                                 <td>{{ course[6] }}</td>
@@ -306,7 +306,7 @@
                                 <td>{{ course[1] }}</td>
                                 <td>{{ course[2] }}</td>
                                 <td>{{ course[3] }}</td>
-                                <td>{{ course[9] }}</td>
+                                <td>{{ professors[course[9] - 1][1] }} {{ professors[course[9] - 1][2] }}</td>
                                 <td>{{ course[4] }}</td>
                                 <td>{{ course[5] }}</td>
                                 <td>{{ course[6] }}</td>
@@ -455,6 +455,7 @@
                             <th>Course Name</th>
                             <th>University</th>
                             <th>Department</th>
+                            <th>Professor</th>
                             <th>Building ID</th>
                             <th>Room ID</th>
                             <th>Time</th>
@@ -468,6 +469,7 @@
                                 <td>{{ course[1] }}</td>
                                 <td>{{ course[2] }}</td>
                                 <td>{{ course[3] }}</td>
+                                <td>{{ professors[course[9] - 1][1] }} {{ professors[course[9] - 1][2] }}</td>
                                 <td>{{ course[4] }}</td>
                                 <td>{{ course[5] }}</td>
                                 <td>{{ course[6] }}</td>

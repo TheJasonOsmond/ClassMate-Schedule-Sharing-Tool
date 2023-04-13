@@ -178,7 +178,7 @@
               <td>{{ course[1] }}</td>
               <td>{{ course[2] }}</td>
               <td>{{ course[3] }}</td>
-              <td>{{ professors[course[9] - 1][1], professors[course[9] - 1][2] }}</td>
+              <td>{{ professors[course[9] - 1][1] }} {{ professors[course[9] - 1][2] }}</td>
               <td>{{ course[4] }}</td>
               <td>{{ course[5] }}</td>
               <td>{{ course[6] }}</td>
@@ -256,9 +256,9 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="professor">Professor:</label>
+            <label for="professor">Professor ID:</label>
             <select class="form-control" id="professor" name="professor">
-              <option value="">Select a Department</option>
+              <option value="">Select a Professor ID</option>
               {% for professor in professors %}
               <option value="{{ professor[0] }}" data-university="{{ professor[1] }}">{{ professor[0] }}</option>
               {% endfor %}

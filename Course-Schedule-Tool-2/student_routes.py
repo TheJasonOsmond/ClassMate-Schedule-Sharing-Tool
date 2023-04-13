@@ -34,11 +34,14 @@ def student(active_tab=None):
             SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
     friends = cur.fetchall()
 
+    cur.execute("SELECT * FROM Professor")
+    professors = cur.fetchall()
+
     #Default Active Tab
     if active_tab == None:
         active_tab = 'courseScheduleTab'
 
-    return render_template('student.html', username=username, course_search=course_search, schedule=schedule, friends=friends, active_tab=active_tab)
+    return render_template('student.html', username=username, course_search=course_search, schedule=schedule, friends=friends, active_tab=active_tab, professors= professors)
 
 @student_routes.route('/course-details/<int:course_id>')
 def course_details(course_id):
@@ -212,13 +215,15 @@ def get_friend_courses(friend_id=None):
             SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
     friends = cur.fetchall()
 
+    cur.execute("SELECT * FROM Professor")
+    professors = cur.fetchall()
 
     cur.execute("SELECT * FROM COURSES WHERE course_id IN (SELECT course_id FROM CourseList WHERE student_id = %s)", (friend_id,))
     friend_schedule = cur.fetchall()
 
     cur.close()
 
-    return render_template('student.html', username=username, course_search=course_search, schedule=schedule, friends=friends, active_tab='friendProfileTab', friend_schedule = friend_schedule, friend_id = friend_id)
+    return render_template('student.html', username=username, course_search=course_search, schedule=schedule, professors = professors,  friends=friends, active_tab='friendProfileTab', friend_schedule = friend_schedule, friend_id = friend_id)
 
           
 
