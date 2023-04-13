@@ -100,7 +100,7 @@
         }
 
         .scrollable-table {
-        max-height: 350px; /* Adjust this value to your desired max height */
+        max-height: 50%; /* Adjust this value to your desired max height */
         overflow-y: auto;
         }
         table {
@@ -167,21 +167,21 @@
                 <div class="scrollable-table">
                     <table>
                         <tr>
-                            <th>Time</th>
-                            <th>Monday</th>
-                            <th>Tuesday</th>
-                            <th>Wednesday</th>
-                            <th>Thursday</th>
-                            <th>Friday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Time</th>
+                            <th style="background:lightgrey; font-weight: bold;">Monday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Tuesday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Wednesday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Thursday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Friday</th>
                         </tr>
                         {% for hour in range(7, 21) %}
                             {% set i = 0 %}
                             {% for half_hour in [0, 30] %}
                                 <tr>
-                                    <td class="time-cell">{{ hour }}:{{ "%02d"|format(half_hour) }} - {{ (hour + 1 if half_hour == 30 else hour) }}:{{ "%02d"|format((half_hour + 30) % 60) }}</td>
+                                    <td style="background:lightgrey; font-weight: bold;" class="time-cell">{{ hour }}:{{ "%02d"|format(half_hour) }} - {{ (hour + 1 if half_hour == 30 else hour) }}:{{ "%02d"|format((half_hour + 30) % 60) }}</td>
                                     {% set day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] %}
                                     {% for i in range(5) %}
-                                        {% set course_list = []%}
+                                        {% set course_list = [] %}
                                         {% for course in schedule %}
                                             {% set time_parts = course[6].split("-") %}
                                             {% set start_time_parts = time_parts[0].split(":") %}
@@ -201,19 +201,22 @@
 
                                         {% if not course_list[0] %}
                                         <td>
-                                            
                                         </td>
                                         {% elif course_list[1]%}
-                                        <td>
+                                        <td style="background:#FFCCCB;">
                                             Conflicting courses:
                                             {% for conflict in course_list %}
+                                                <br><br>
+                                                {{ conflict[1] }}
                                                 <br>
-                                                {{ course_list[0][1] }}
+                                                {{ conflict[2]}}
                                             {% endfor %}
                                         </td>
                                         {% else %}
-                                        <td>
+                                        <td style="background:lightgreen;">
                                             {{ course_list[0][1] }}
+                                            <br>
+                                            {{ course_list[0][2] }}
                                         </td>
                                         {% endif %}
                                     {% endfor %}                                                    
@@ -393,18 +396,18 @@
                 <div id="friendScheduleTab" class="tabcontent">
                     <table>
                         <tr>
-                            <th>Time</th>
-                            <th>Monday</th>
-                            <th>Tuesday</th>
-                            <th>Wednesday</th>
-                            <th>Thursday</th>
-                            <th>Friday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Time</th>
+                            <th style="background:lightgrey; font-weight: bold;">Monday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Tuesday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Wednesday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Thursday</th>
+                            <th style="background:lightgrey; font-weight: bold;">Friday</th>
                         </tr>
                         {% for hour in range(7, 21) %}
                             {% set i = 0 %}
                             {% for half_hour in [0, 30] %}
                                 <tr>
-                                    <td class="time-cell">{{ hour }}:{{ "%02d"|format(half_hour) }} - {{ (hour + 1 if half_hour == 30 else hour) }}:{{ "%02d"|format((half_hour + 30) % 60) }}</td>
+                                    <td style="background:lightgrey; font-weight: bold;" class="time-cell">{{ hour }}:{{ "%02d"|format(half_hour) }} - {{ (hour + 1 if half_hour == 30 else hour) }}:{{ "%02d"|format((half_hour + 30) % 60) }}</td>
                                     {% set day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] %}
                                     {% for i in range(5) %}
                                         {% set course_list = []%}
@@ -427,19 +430,22 @@
 
                                         {% if not course_list[0] %}
                                         <td>
-
                                         </td>
                                         {% elif course_list[1]%}
-                                        <td>
+                                        <td style="background:#FFCCCB;">
                                             Conflicting courses:
                                             {% for conflict in course_list %}
+                                                <br><br>
+                                                {{ conflict[1] }}
                                                 <br>
-                                                {{ course_list[0][1] }}
+                                                {{ conflict[2]}}
                                             {% endfor %}
                                         </td>
                                         {% else %}
-                                        <td>
+                                        <td style="background:lightgreen;">
                                             {{ course_list[0][1] }}
+                                            <br>
+                                            {{ course_list[0][2] }}
                                         </td>
                                         {% endif %}
                                     {% endfor %}
