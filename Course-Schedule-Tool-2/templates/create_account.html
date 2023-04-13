@@ -1,26 +1,113 @@
+<!doctype html>
 <html>
-  <head>
+<head>
     <title>Account Creation</title>
-  </head>
-  <body>
-    <h1>Create Account</h1>
-    <form action="/create_account" method="post">
-      <label for="f_name">First name:</label>
-      <input type="text" id="f_name" name="f_name" required><br><br>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-      <label for="l_name">Last name:</label>
-      <input type="text" id="l_name" name="l_name" required><br><br>
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required><br><br>
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required><br><br>
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
 
-      <input type="submit" value="Create Account"> <button onclick="location.href='/'">Return to Login</button>
-      {% if status_message %}
-        <p class="status">{{ status_message }}</p>
-      {% endif %}
-    </form>
-  </body>
+        input {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 auto;
+            transition-duration: 0.4s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        button {
+            background-color: #008CBA;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px auto;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition-duration: 0.4s;
+        }
+
+        button:hover {
+            background-color: #007399;
+        }
+
+        .status {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Account</h1>
+        <form action="/create_account" method="post">
+            <label for="f_name">First name:</label>
+            <input type="text" id="f_name" name="f_name" required>
+            <label for="l_name">Last name:</label>
+            <input type="text" id="l_name" name="l_name" required>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <input type="submit" value="Create Account">
+            <div style="text-align: center;">
+              <button onclick="location.href='/'">Return to Login</button>
+            </div>
+            {% if status_message %}
+                <p class="status">{{ status_message }}</p>
+            {% endif %}
+        </form>
+    </div>
+</body>
 </html>
