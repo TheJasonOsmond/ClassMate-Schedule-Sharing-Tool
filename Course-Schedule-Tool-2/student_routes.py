@@ -26,10 +26,12 @@ def student(active_tab=None):
                 (session['student_id'],))
     course_search = cur.fetchall()
 
-    #TODO Join With login to get the usernames of friends
-    cur.execute("SELECT * FROM Student WHERE student_id IN (SELECT student_id FROM Friends WHERE friend_id = %s \
-                UNION \
-                SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
+    #Get Id, names, and username of friends
+    cur.execute("SELECT Student.student_id, Student.f_name, Student.l_name, Login.username FROM Student \
+            INNER JOIN Login ON Student.student_id = Login.student_id \
+            WHERE Student.student_id IN (SELECT student_id FROM Friends WHERE friend_id = %s \
+            UNION \
+            SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
     friends = cur.fetchall()
 
     #Default Active Tab
@@ -177,10 +179,12 @@ def get_friend_courses():
                 (session['student_id'],))
     course_search = cur.fetchall()
 
-    #TODO Join With login to get the usernames of friends
-    cur.execute("SELECT * FROM Student WHERE student_id IN (SELECT student_id FROM Friends WHERE friend_id = %s \
-                UNION \
-                SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
+    #Get Id, names, and username of friends
+    cur.execute("SELECT Student.student_id, Student.f_name, Student.l_name, Login.username FROM Student \
+            INNER JOIN Login ON Student.student_id = Login.student_id \
+            WHERE Student.student_id IN (SELECT student_id FROM Friends WHERE friend_id = %s \
+            UNION \
+            SELECT friend_id FROM Friends WHERE student_id = %s)", (session['student_id'], session['student_id']))
     friends = cur.fetchall()
 
 

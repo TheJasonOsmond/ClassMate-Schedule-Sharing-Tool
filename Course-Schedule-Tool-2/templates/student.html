@@ -376,6 +376,7 @@
                     <table id="friends-table">
                         <thead>
                             <tr>
+                                <th>Username</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Action</th>
@@ -384,12 +385,13 @@
                         <tbody>
                             {% for friend in friends %}
                             <tr>
+                                <td>{{ friend[3] }}</td>
                                 <td>{{ friend[1] }}</td>
                                 <td>{{ friend[2] }}</td>
                                 <td>
                                     <div class="action-buttons">
                                         <form action="{{ url_for('student_routes.get_friend_courses') }}" method="POST" style="display: inline;">
-                                            <button type="submit" class="tablink{{ ' active' if active_tab == 'friendProfileTab' else '' }}" onclick="openTab(event, 'friendProfileTab')">View Profile</button>
+                                            <button type="submit" class="button" class="tablink{{ ' active' if active_tab == 'friendProfileTab' else '' }}" onclick="openTab(event, 'friendProfileTab')">View Profile</button>
                                             <input type="hidden" name="friend_id" value="{{ friend[0] }}">
                                         </form>
                                         
