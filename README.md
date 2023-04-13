@@ -7,7 +7,8 @@ Course Mate
     pip install Flask
     pip install Flask-MySQLdb
     pip install mysql-connector-python
-3. Using a simple file editor input your login information at the top of the following where prompted:
+3. Using a simple file editor, input your login information at the top of the following files where
+   prompted to input "your_username" and "your_password":
     create_database.py
     app.py
 4. Run create_database.py
