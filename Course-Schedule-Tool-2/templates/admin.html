@@ -272,10 +272,36 @@
             <label for="room_id">Room ID:</label>
             <input type="number" class="form-control" id="room_id" name="room_id">
           </div>
+          <!-- TIME DROPDOWNS -->
           <div class="form-group">
-            <label for="time">Time:</label>
-            <input type="text" class="form-control" id="time" name="time">
+            <label for="start_hour">Start Time:</label>
+            <select class="form-control" id="start_hour" name="start_hour">
+              {% for hour in range(7, 20) %}
+              <option value="{{ '%02d' % hour }}">{{ '%02d' % hour }}</option>
+              {% endfor %}
+            </select>
+            :
+            <select class="form-control" id="start_min" name="start_min">
+              {% for minute in [0, 30] %}
+              <option value="{{ '%02d' % minute }}">{{ '%02d' % minute }}</option>
+              {% endfor %}
+            </select>
           </div>
+          <div class="form-group">
+            <label for="end_hour">End Time:</label>
+            <select class="form-control" id="end_hour" name="end_hour">
+              {% for hour in range(7, 20) %}
+              <option value="{{ '%02d' % hour }}">{{ '%02d' % hour }}</option>
+              {% endfor %}
+            </select>
+            :
+            <select class="form-control" id="end_min" name="end_min">
+              {% for minute in [0, 30] %}
+              <option value="{{ '%02d' % minute }}">{{ '%02d' % minute }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <!-- END OF TIME DROPDOWNS -->
           <div class="form-group">
             <label for="days">Days(int format):</label>
             <input type="number" class="form-control" id="days" name="days">

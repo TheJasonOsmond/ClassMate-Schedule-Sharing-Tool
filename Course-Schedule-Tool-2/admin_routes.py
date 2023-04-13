@@ -71,7 +71,11 @@ def add_course():
         professor_id = request.form['professor'] or None
         building_id = request.form['building_id'] or None
         room_id = request.form['room_id'] or None
-        time = request.form['time'] or None
+        start_hour = request.form['start_hour']
+        start_min = request.form['start_min']
+        end_hour = request.form['end_hour']
+        end_min = request.form['end_min']
+        time = f"{start_hour}:{start_min}-{end_hour}:{end_min}"
         info = request.form['info'] or None
         days = request.form['days'] or None
         
