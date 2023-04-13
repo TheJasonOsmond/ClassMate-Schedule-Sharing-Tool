@@ -232,6 +232,7 @@
                             <th>Course Name</th>
                             <th>University</th>
                             <th>Department</th>
+                            <th>Professor</th>
                             <th>Building ID</th>
                             <th>Room ID</th>
                             <th>Time</th>
@@ -245,6 +246,7 @@
                                 <td>{{ course[1] }}</td>
                                 <td>{{ course[2] }}</td>
                                 <td>{{ course[3] }}</td>
+                                <td>{{ course[9] }}</td>
                                 <td>{{ course[4] }}</td>
                                 <td>{{ course[5] }}</td>
                                 <td>{{ course[6] }}</td>
@@ -290,6 +292,7 @@
                             <th>Course Name</th>
                             <th>University</th>
                             <th>Department</th>
+                            <th>Professor</th>
                             <th>Building ID</th>
                             <th>Room ID</th>
                             <th>Time</th>
@@ -303,6 +306,7 @@
                                 <td>{{ course[1] }}</td>
                                 <td>{{ course[2] }}</td>
                                 <td>{{ course[3] }}</td>
+                                <td>{{ course[9] }}</td>
                                 <td>{{ course[4] }}</td>
                                 <td>{{ course[5] }}</td>
                                 <td>{{ course[6] }}</td>
@@ -443,7 +447,9 @@
                             {% endfor %}
                         {% endfor %}
                     </table>
-                    <table id="course-table">
+
+                    <!-- COURSE LIST -->
+                    <table id="course-table" style = "margin-top: 20px;">
                         <tr>
                             <!--<th>Course ID</th>-->
                             <th>Course Name</th>

@@ -68,6 +68,7 @@ def add_course():
         course_name = request.form['course_name']
         university = request.form['university']
         department = request.form['department']
+        professor = request.form['professor'] or None
         building_id = request.form['building_id'] or None
         room_id = request.form['room_id'] or None
         time = request.form['time'] or None

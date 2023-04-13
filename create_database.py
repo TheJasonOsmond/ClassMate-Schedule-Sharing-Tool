@@ -84,7 +84,9 @@ def create_tables():
                     time VARCHAR(50) NULL,\
                     info VARCHAR(255) NULL,\
                     days INT UNSIGNED NULL,\
+                    professor_id INT UNSIGNED NULL,\
                     FOREIGN KEY (`department`, `university`) REFERENCES Department(`name`, `university`) ON DELETE CASCADE,\
+                    FOREIGN KEY (professor_id) REFERENCES Professor(professor_id) ON DELETE SET NULL,\
                     FOREIGN KEY (building_id, room_id) REFERENCES Room(building_id, room_id) ON DELETE SET NULL)"
                     )
     execute_query("CREATE TABLE CourseList (\
@@ -137,11 +139,9 @@ def add_default_values():
         execute_query(f"INSERT INTO Department (`name`, `university`) SELECT '{department[0]}', u.`name` FROM University u WHERE u.`name` = '{department[1]}'")
 
     # Insert values into Professor table, referencing departments and universities by name
-    professors = [  ('John', 'Doe', 'Computer Science', 'University of Calgary'),
-                    ('Jane', 'Smith', 'Business Administration', 'University of British Columbia'), 
-                    ('Will', 'Dude', 'Computer Science', 'University of British Columbia'),
-                    ('Paul', 'Rudd', 'Computer Science', 'University of Toronto'),
-                    ('Bob', 'Johnson', 'Mechanical Engineering', 'University of Toronto')]
+    professors = [  ('Cal', 'Gary', 'Computer Science', 'University of Calgary'),
+                    ('Brit', 'Columbia', 'Business Administration', 'University of British Columbia'), 
+                    ('To', 'Ronto', 'Computer Science', 'University of British Columbia')]
     for professor in professors:
         execute_query(f"INSERT INTO Professor (f_name, l_name, `department`, `university`) SELECT '{professor[0]}', '{professor[1]}', d.`name`, u.`name` FROM Department d, University u WHERE d.`name` = '{professor[2]}' AND d.`university` = u.`name` AND u.`name` = '{professor[3]}'")
 
@@ -151,21 +151,22 @@ def add_default_values():
         execute_query(f"INSERT INTO Room (building_id, room_id, `university`) SELECT {room[0]}, {room[1]}, u.`name` FROM University u WHERE u.`name` = '{room[2]}'")
 
     # Insert rows into the Courses table with the Course names and other required data 
-    courses = [('CPSC 200', 'University of Calgary', 'Computer Science', 1, 101, '10:00-11:30', 'Intro to Computer Science', 21),
-            ('CPSC 250', 'University of Calgary', 'Computer Science', 1, 101, '12:00-13:30', 'Data Structures', 21),
-            ('CPSC 255', 'University of British Columbia', 'Computer Science', 2, 201, '14:00-15:30', 'Algorithms', 10),
-            ('CPSC 270', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Software Engineering', 10),
-            ('CPSC 290', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Operating Systems', 20),
-            ('CPSC 300', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Computer Networks', 20),
-            ('CPSC 350', 'University of Calgary', 'Computer Science', 1, 101, '14:00-15:30', 'Artificial Intelligence', 21),
-            ('CPSC 355', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Machine Learning', 5),
-            ('CPSC 360', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Computer Graphics', 21),
-            ('CPSC 400', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Cryptography', 10)]
+    courses = [('CPSC 200', 'University of Calgary', 'Computer Science', 1, 101, '10:00-11:30', 'Intro to Computer Science', 21, 1),
+            ('CPSC 250', 'University of Calgary', 'Computer Science', 1, 101, '12:00-13:30', 'Data Structures', 21, 1),
+            ('CPSC 255', 'University of British Columbia', 'Computer Science', 2, 201, '14:00-15:30', 'Algorithms', 10, 2),
+            ('CPSC 270', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Software Engineering', 10, 2),
+            ('CPSC 290', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Operating Systems', 20, 3),
+            ('CPSC 300', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Computer Networks', 20, 3),
+            ('CPSC 350', 'University of Calgary', 'Computer Science', 1, 101, '14:00-15:30', 'Artificial Intelligence', 21, 1),
+            ('CPSC 355', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Machine Learning', 5, 2),
+            ('CPSC 360', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Computer Graphics', 21, 3),
+            ('CPSC 400', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Cryptography', 10, 3)]
 
     for course in courses:
-        execute_query(f"INSERT INTO Courses (name, university, department, building_id, room_id, time, info, days) SELECT \
-                  '{course[0]}', d.`university`, d.`name`, {course[3]}, {course[4]}, '{course[5]}', '{course[6]}', '{course[7]}' FROM \
-                  Department d WHERE d.`university` = '{course[1]}' AND d.`name` = '{course[2]}'")
+        execute_query(f"INSERT INTO Courses (name, university, department, building_id, room_id, time, info, days, professor_id) SELECT \
+                '{course[0]}', d.`university`, d.`name`, {course[3]}, {course[4]}, '{course[5]}', '{course[6]}', '{course[7]}', {course[8]} FROM \
+                Department d WHERE d.`university` = '{course[1]}' AND d.`name` = '{course[2]}'")
+
 
     # Insert rows into CourseList table
     # For student_id = 1 aka Jane Doe

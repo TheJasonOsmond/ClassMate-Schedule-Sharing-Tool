@@ -164,6 +164,7 @@
               <th>Course Name</th>
               <th>University</th>
               <th>Department</th>
+              <th>Professor</th>
               <th>Building ID</th>
               <th>Room ID</th>
               <th>Time</th>
@@ -177,6 +178,7 @@
               <td>{{ course[1] }}</td>
               <td>{{ course[2] }}</td>
               <td>{{ course[3] }}</td>
+              <td>{{ professors[course[9] - 1][1], professors[course[9] - 1][2] }}</td>
               <td>{{ course[4] }}</td>
               <td>{{ course[5] }}</td>
               <td>{{ course[6] }}</td>
@@ -203,7 +205,6 @@
               <td>{{ course[7] }}</td>
               <td>
                 <div class="action-buttons">
-                  <button class="button">Edit Course</button>
                   <form action="{{ url_for('admin_routes.delete_course') }}" method="POST" style="display: inline;">
                     <input type="hidden" name="course_id" value="{{ course[0] }}">
                     <button type="submit" class="button">Delete Course</button>
@@ -251,6 +252,15 @@
               <option value="">Select a Department</option>
               {% for department in departments %}
               <option value="{{ department[0] }}" data-university="{{ department[1] }}">{{ department[0] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="professor">Professor:</label>
+            <select class="form-control" id="professor" name="professor">
+              <option value="">Select a Department</option>
+              {% for professor in professors %}
+              <option value="{{ professor[0] }}" data-university="{{ professor[1] }}">{{ professor[0] }}</option>
               {% endfor %}
             </select>
           </div>
