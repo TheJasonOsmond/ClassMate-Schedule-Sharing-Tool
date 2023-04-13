@@ -145,29 +145,6 @@
 			document.getElementById(tabName).style.display = "block";
 			event.currentTarget.className += " active";
 		}
-
-        document.addEventListener('DOMContentLoaded', function() {
-        const showCoursesButtons = document.querySelectorAll('.show-courses');
-        const modal = document.getElementById('courses-modal');
-        const close = document.querySelector('.close');
-
-        showCoursesButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Show the modal
-                modal.style.display = 'block';
-            });
-        });
-
-        close.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
-
-        window.addEventListener('click', function(event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        });
-    });
 	</script>
 </head>
 <body>
@@ -526,14 +503,4 @@
         </div>
     </div>
 </body>
-
-<!-- Pop-up modal structure - Friend Profile -->
-<div id="courses-modal" class="modal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; z-index: 2; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
-    <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%;">
-        <span class="close" style="color: #aaaaaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
-        <h2>Friend's Profile</h2>
-        <div id="courses-list"></div>
-    </div>
-</div>
-
 </html>
