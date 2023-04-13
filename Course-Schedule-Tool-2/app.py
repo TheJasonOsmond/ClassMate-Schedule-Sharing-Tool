@@ -26,6 +26,7 @@ def binary_format(value, length):
     return format(value, f"0{length}b")
 
 app.jinja_env.filters['binary_format'] = binary_format
+app.jinja_env.add_extension('jinja2.ext.do')
 
 @app.route('/')
 def login():

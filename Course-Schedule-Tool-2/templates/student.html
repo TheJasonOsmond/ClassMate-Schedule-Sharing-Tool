@@ -198,12 +198,13 @@
                             <th>Friday</th>
                         </tr>
                         {% for hour in range(7, 21) %}
+                            {% set i = 0 %}
                             {% for half_hour in [0, 30] %}
                                 <tr>
                                     <td class="time-cell">{{ hour }}:{{ "%02d"|format(half_hour) }} - {{ (hour if half_hour == 30 else hour + 1) }}:{{ "%02d"|format((half_hour + 30) % 60) }}</td>
                                     {% set day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] %}
-                                    {% for day_name in day_names %}
-                                        {% set course_found = False %}
+                                    {% for i in range(5) %}
+                                        {% set course_list = []%}
                                         {% for course in schedule %}
                                             {% set time_parts = course[6].split("-") %}
                                             {% set start_time_parts = time_parts[0].split(":") %}
@@ -212,17 +213,33 @@
                                             {% set start_minute = start_time_parts[1]|int %}
                                             {% set end_hour = end_time_parts[0]|int %}
                                             {% set end_minute = end_time_parts[1]|int %}
-                                            {% set day_bit = course[8]|int|binary_format(5) %}
-                                            {% if day_bit[loop.index0] == "1" and start_hour * 60 + start_minute <= hour * 60 + half_hour < end_hour * 60 + end_minute %}
-                                                <td><a href="{{ url_for('student_routes.course_details', course_id=course[0]) }}">{{ course[1] }}</a></td>
-                                                {% set course_found = True %}
+
+                                            {% if course[8] != none %}
+                                                {% set day_bit = course[8]|int|binary_format(5) %}
+                                                {% if (day_bit[i] == "1" and (start_hour * 60 + start_minute <= hour * 60 + half_hour < end_hour * 60 + end_minute)) %}
+                                                    {% do course_list.append(course)%}
+                                                {% endif %}
                                             {% endif %}
                                         {% endfor %}
-                                        {% if not course_found %}
-                                            <td></td>
-                                            <!-- {% set course_found = True %} -->
+
+                                        {% if not course_list[0] %}
+                                        <td>
+                                            
+                                        </td>
+                                        {% elif course_list[1]%}
+                                        <td>
+                                            Conflicting courses:
+                                            {% for conflict in course_list %}
+                                                <br>
+                                                {{ course_list[0][1] }}
+                                            {% endfor %}
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            {{ course_list[0][1] }}
+                                        </td>
                                         {% endif %}
-                                    {% endfor %}                                                            
+                                    {% endfor %}                                                    
                                 </tr>
                             {% endfor %}
                         {% endfor %}
