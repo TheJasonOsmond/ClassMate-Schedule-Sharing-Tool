@@ -182,7 +182,7 @@
             <div class="tab-container">
                 <button class="tablink{{ ' active' if active_tab == 'courseScheduleTab' else '' }}" onclick="openTab(event, 'courseScheduleTab')">Course Schedule</button>
                 <button class="tablink{{ ' active' if active_tab == 'addCoursesTab' else '' }}" onclick="openTab(event, 'addCoursesTab')">Add Courses</button>
-                <button class="tablink{{ ' active' if active_tab == 'removeCoursesTab' else '' }}" onclick="openTab(event, 'removeCoursesTab')">Remove Courses</button>
+                <button class="tablink{{ ' active' if active_tab == 'removeCoursesTab' else '' }}" onclick="openTab(event, 'removeCoursesTab')">Course Details</button>
                 <button class="tablink{{ ' active' if active_tab == 'friendsTab' else '' }}" onclick="openTab(event, 'friendsTab')">Friends</button>                           
             </div>
             <!-- COURSE SCHEDULE -->
@@ -391,7 +391,7 @@
                                 <td>
                                     <div class="action-buttons">
                                         <form action="{{ url_for('student_routes.get_friend_courses') }}" method="POST" style="display: inline;">
-                                            <button type="submit" class="button" class="tablink{{ ' active' if active_tab == 'friendProfileTab' else '' }}" onclick="openTab(event, 'friendProfileTab')">View Profile</button>
+                                            <button type="submit" class="button" class="tablink{{ ' active' if active_tab == 'friendProfileTab' else '' }}" onclick="openTab(event, 'friendProfileTab')">View Schedule</button>
                                             <input type="hidden" name="friend_id" value="{{ friend[0] }}">
                                         </form>
                                         
@@ -405,6 +405,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    
                 </div>
             </div>
             <div id="friendProfileTab" class="tabcontent tab{% if active_tab == 'friendProfileTab' %} active{% endif %}" data-tabname="friendProfileTab">
@@ -463,6 +464,60 @@
                                     {% endfor %}
                                 </tr>
                             {% endfor %}
+                        {% endfor %}
+                    </table>
+                    <table id="course-table">
+                        <tr>
+                            <!--<th>Course ID</th>-->
+                            <th>Course Name</th>
+                            <th>University</th>
+                            <th>Department</th>
+                            <th>Building ID</th>
+                            <th>Room ID</th>
+                            <th>Time</th>
+                            <th>Days</th>
+                            <th>Info</th>
+                            <th>Actions</th>
+                        </tr>
+                        {% for course in friend_schedule %}
+                            <tr>
+                            <!--<td>{{ course[0] }}</td>-->
+                                <td>{{ course[1] }}</td>
+                                <td>{{ course[2] }}</td>
+                                <td>{{ course[3] }}</td>
+                                <td>{{ course[4] }}</td>
+                                <td>{{ course[5] }}</td>
+                                <td>{{ course[6] }}</td>
+                                <td>
+                                    {% set day_bits = course[8]|int|binary_format(5) %}
+                                    {% set course_days = [] %}
+                                    {% if day_bits[0] == "1" %}
+                                        {% set course_days = course_days + ["Mon"] %}
+                                    {% endif %}
+                                    {% if day_bits[1] == "1" %}
+                                        {% set course_days = course_days + ["Tue"] %}
+                                    {% endif %}
+                                    {% if day_bits[2] == "1" %}
+                                        {% set course_days = course_days + ["Wed"] %}
+                                    {% endif %}
+                                    {% if day_bits[3] == "1" %}
+                                        {% set course_days = course_days + ["Thu"] %}
+                                    {% endif %}
+                                    {% if day_bits[4] == "1" %}
+                                        {% set course_days = course_days + ["Fri"] %}
+                                    {% endif %}
+                                    {{ ", ".join(course_days) }}
+                                </td>
+                                <td>{{ course[7] }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <form action="{{ url_for('student_routes.get_course_from_friend') }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="button">Get this course</button>
+                                        <input type="hidden" name="course_id" friend_id="{{ friend_id }}" value="{{ course[0] }}">
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </table>
                     </div>
