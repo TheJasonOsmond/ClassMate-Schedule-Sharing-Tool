@@ -134,8 +134,6 @@ def add_default_values():
 
     # Insert values into Department table, referencing universities by name
     departments = [ ('Computer Science', 'University of Calgary'),
-                    ('Computer Science', 'University of British Columbia'),
-                    ('Computer Science', 'University of Toronto'),
                     ('Business Administration', 'University of British Columbia'),
                     ('Mechanical Engineering', 'University of Toronto')]
     for department in departments:
@@ -144,7 +142,7 @@ def add_default_values():
     # Insert values into Professor table, referencing departments and universities by name
     professors = [  ('Cal', 'Gary', 'Computer Science', 'University of Calgary'),
                     ('Brit', 'Columbia', 'Business Administration', 'University of British Columbia'), 
-                    ('To', 'Ronto', 'Computer Science', 'University of British Columbia')]
+                    ('To', 'Ronto', 'Mechanical Engineering', 'University of Toronto')]
     for professor in professors:
         execute_query(f"INSERT INTO Professor (f_name, l_name, `department`, `university`) SELECT '{professor[0]}', '{professor[1]}', d.`name`, u.`name` FROM Department d, University u WHERE d.`name` = '{professor[2]}' AND d.`university` = u.`name` AND u.`name` = '{professor[3]}'")
 
@@ -156,14 +154,14 @@ def add_default_values():
     # Insert rows into the Courses table with the Course names and other required data 
     courses = [('CPSC 200', 'University of Calgary', 'Computer Science', 1, 101, '10:00-11:30', 'Intro to Computer Science', 21, 1),
             ('CPSC 250', 'University of Calgary', 'Computer Science', 1, 101, '12:00-13:30', 'Data Structures', 21, 1),
-            ('CPSC 255', 'University of British Columbia', 'Computer Science', 2, 201, '14:00-15:30', 'Algorithms', 10, 2),
-            ('CPSC 270', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Software Engineering', 10, 2),
-            ('CPSC 290', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Operating Systems', 20, 3),
-            ('CPSC 300', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Computer Networks', 20, 3),
             ('CPSC 350', 'University of Calgary', 'Computer Science', 1, 101, '14:00-15:30', 'Artificial Intelligence', 21, 1),
-            ('CPSC 355', 'University of British Columbia', 'Computer Science', 2, 201, '16:00-17:30', 'Machine Learning', 5, 2),
-            ('CPSC 360', 'University of Toronto', 'Computer Science', 3, 301, '10:00-11:30', 'Computer Graphics', 21, 3),
-            ('CPSC 400', 'University of Toronto', 'Computer Science', 3, 301, '12:00-13:30', 'Cryptography', 10, 3)]
+            ('BUSA 255', 'University of British Columbia', 'Business Administration', 2, 201, '14:00-15:30', 'Introduction to Business', 10, 2),
+            ('BUSA 270', 'University of British Columbia', 'Business Administration', 2, 201, '16:00-17:30', 'Introduction to Business Administration', 10, 2),
+            ('BUSA 355', 'University of British Columbia', 'Business Administration', 2, 201, '16:00-17:30', 'Search Engine Optimization', 5, 2),
+            ('MECA 290', 'University of Toronto', 'Mechanical Engineering', 3, 301, '10:00-11:30', 'Mechanical Systems', 20, 3),
+            ('MECA 300', 'University of Toronto', 'Mechanical Engineering', 3, 301, '12:00-13:30', 'Hyper Networks', 20, 3),
+            ('MECA 360', 'University of Toronto', 'Mechanical Engineering', 3, 301, '10:00-11:30', 'Computer Implementations', 21, 3),
+            ('MECA 400', 'University of Toronto', 'Mechanical Engineering', 3, 301, '12:00-13:30', 'Nuclear Physics', 10, 3)]
 
     for course in courses:
         execute_query(f"INSERT INTO Courses (name, university, department, building_id, room_id, time, info, days, professor_id) SELECT \
